@@ -1,0 +1,48 @@
+{# KittyNews logo lockup. variant: primary | dark | mark
+   Rendered to PNG by tools/render_png.py — email clients can't display SVG. #}
+{% import 'brand/_mark.svg.j2' as glyph %}
+{% set c = brand.color %}
+{% set on_dark = variant == 'dark' %}
+{% set mark_only = variant == 'mark' %}
+{% set word_a = c.paper if on_dark else c.ink %}
+{% set word_b = c.marmalade if on_dark else c.marmalade_deep %}
+{% set eye = c.ink if on_dark else c.paper %}
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="{{ brand.type.png.webfont_url }}" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: transparent; }
+  #card {
+    display: inline-flex;
+    align-items: center;
+    gap: {{ brand.logo.lockup_gap }}px;
+    padding: {{ 0 if mark_only else 6 }}px;
+  }
+  .mark { height: auto; display: block; }
+  .word {
+    font-family: {{ brand.type.png.display }};
+    font-weight: 900;
+    font-size: {{ brand.logo.wordmark_size }}px;
+    letter-spacing: -0.022em;
+    line-height: 1;
+    white-space: nowrap;
+    /* optical: the mark's round head sits visually low against caps */
+    margin-top: -2px;
+  }
+  .a { color: {{ word_a }}; }
+  .b { color: {{ word_b }}; }
+</style>
+</head>
+<body>
+<div id="card">
+  {{ glyph.cat(c.marmalade, eye, brand.logo.mark_size * (2.4 if mark_only else 1)) }}
+  {% if not mark_only %}
+  <div class="word"><span class="a">Kitty</span><span class="b">News</span></div>
+  {% endif %}
+</div>
+</body>
+</html>

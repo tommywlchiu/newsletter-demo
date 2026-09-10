@@ -1,0 +1,265 @@
+{# KittyNews brand guidelines sheet. Every value reads from brand.json, so this
+   board can never drift out of date with the assets it documents. #}
+{% import 'brand/_mark.svg.j2' as glyph %}
+{% set c = brand.color %}
+{% set t = brand.type %}
+{% set swatches = [
+  ('ink',            c.ink,            'Body text, wordmark',        'text safe'),
+  ('paper',          c.paper,          'Email background',           'ground'),
+  ('sand',           c.sand,           'Card + infographic ground',  'ground'),
+  ('rule',           c.rule,           'Hairlines, table borders',   'lines only'),
+  ('muted',          c.muted,          'Captions, sources, footer',  'text safe'),
+  ('marmalade',      c.marmalade,      'Cat mark, chart slot 1, rules', 'marks only'),
+  ('marmalade_deep', c.marmalade_deep, 'Links, display numerals',    'text safe'),
+  ('teal',           c.teal,           'Chart slot 2, accent fills', 'large text'),
+  ('teal_deep',      c.teal_deep,      'Text-safe teal',             'text safe'),
+] %}
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="{{ t.png.webfont_url }}" rel="stylesheet">
+<style>
+  html, body { margin:0; padding:0; background:transparent; }
+  #card {
+    width: 960px; box-sizing: border-box; padding: 56px 60px 48px;
+    background: {{ c.paper }};
+    font-family: {{ t.png.body }};
+    color: {{ c.ink }};
+    -webkit-font-smoothing: antialiased;
+  }
+  .display { font-family: {{ t.png.display }}; }
+
+  header { display:flex; align-items:flex-end; justify-content:space-between;
+           padding-bottom:22px; border-bottom:3px solid {{ c.ink }}; }
+  .lockup { display:flex; align-items:center; gap:{{ brand.logo.lockup_gap }}px; }
+  .word { font-family:{{ t.png.display }}; font-weight:900; font-size:40px;
+          letter-spacing:-.022em; line-height:1; margin-top:-2px; }
+  .doc { text-align:right; font-size:12px; color:{{ c.muted }}; letter-spacing:.14em;
+         text-transform:uppercase; line-height:1.7; }
+
+  h2 { font-family:{{ t.png.display }}; font-size:13px; font-weight:600;
+       letter-spacing:.18em; text-transform:uppercase; color:{{ c.marmalade_deep }};
+       margin:38px 0 16px; display:flex; align-items:center; gap:10px; }
+  h2::after { content:""; flex:1; height:1px; background:{{ c.rule }}; }
+
+  .row { display:flex; gap:20px; align-items:flex-start; }
+  .panel { background:{{ c.sand }}; border-radius:{{ brand.layout.radius_small }}px;
+           padding:22px 24px; flex:1; }
+  .panel.ink { background:{{ c.ink }}; }
+  .cap { font-size:11px; color:{{ c.muted }}; letter-spacing:.1em;
+         text-transform:uppercase; margin-top:14px; }
+  .panel.ink .cap { color:{{ c.sand }}; opacity:.65; }
+
+  /* colour */
+  .swatches { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .sw { border:1px solid {{ c.rule }}; border-radius:{{ brand.layout.radius_small }}px;
+        overflow:hidden; }
+  .chip { height:62px; }
+  .meta { padding:10px 12px 12px; background:{{ c.paper }}; }
+  .nm { font-weight:600; font-size:14px; }
+  .hx { font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:12px;
+        color:{{ c.muted }}; margin-top:2px; }
+  .rl { font-size:11.5px; color:{{ c.muted }}; margin-top:6px; line-height:1.4; }
+  .tag { display:inline-block; margin-top:8px; font-size:10px; letter-spacing:.08em;
+         text-transform:uppercase; padding:3px 7px; border-radius:4px;
+         background:{{ c.sand }}; color:{{ c.muted }}; font-weight:600; }
+  .tag.warn { background:#F6DFD2; color:{{ c.marmalade_deep }}; }
+
+  /* type */
+  .spec { display:flex; align-items:baseline; gap:16px; padding:9px 0;
+          border-bottom:1px solid {{ c.rule }}; }
+  .spec:last-child { border-bottom:0; }
+  .spec .lbl { width:88px; flex:none; font-size:11px; color:{{ c.muted }};
+               letter-spacing:.08em; text-transform:uppercase; }
+  .spec .px { width:52px; flex:none; font-size:11px; color:{{ c.muted }};
+              font-family:ui-monospace,monospace; }
+
+  /* charts */
+  .ramp { display:flex; gap:10px; }
+  .slot { flex:1; text-align:center; }
+  .bar { height:76px; border-radius:6px 6px 0 0; }
+  .slotn { font-size:11px; color:{{ c.muted }}; margin-top:8px; }
+  .slothex { font-family:ui-monospace,monospace; font-size:10.5px;
+             color:{{ c.muted }}; opacity:.75; }
+
+  ul { margin:0; padding-left:18px; }
+  li { font-size:13.5px; line-height:1.72; margin-bottom:5px; }
+  .dos { display:flex; gap:20px; }
+  .dos > div { flex:1; }
+  .dos h3 { font-size:12px; letter-spacing:.1em; text-transform:uppercase;
+            margin:0 0 10px; }
+  .do h3 { color:{{ c.teal_deep }}; }
+  .dont h3 { color:{{ c.marmalade_deep }}; }
+
+  footer { margin-top:36px; padding-top:16px; border-top:1px solid {{ c.rule }};
+           font-size:11px; color:{{ c.muted }}; line-height:1.65; }
+</style>
+</head>
+<body>
+<div id="card">
+
+  <header>
+    <div class="lockup">
+      {{ glyph.cat(c.marmalade, c.paper, 48) }}
+      <div class="word"><span style="color:{{ c.ink }}">Kitty</span><span style="color:{{ c.marmalade_deep }}">News</span></div>
+    </div>
+    <div class="doc">Brand Guidelines<br>v1 &middot; {{ brand._provenance.date }}</div>
+  </header>
+
+  <h2>01 &nbsp;Logo</h2>
+  <div class="row">
+    <div class="panel">
+      <div class="lockup">
+        {{ glyph.cat(c.marmalade, c.paper, 40) }}
+        <div class="word" style="font-size:33px"><span style="color:{{ c.ink }}">Kitty</span><span style="color:{{ c.marmalade_deep }}">News</span></div>
+      </div>
+      <div class="cap">Primary &middot; on paper or sand</div>
+    </div>
+    <div class="panel ink">
+      <div class="lockup">
+        {{ glyph.cat(c.marmalade, c.ink, 40) }}
+        <div class="word" style="font-size:33px"><span style="color:{{ c.paper }}">Kitty</span><span style="color:{{ c.marmalade }}">News</span></div>
+      </div>
+      <div class="cap">Reversed &middot; on ink</div>
+    </div>
+    <div class="panel" style="flex:0 0 150px; text-align:center">
+      {{ glyph.cat(c.marmalade, c.paper, 62) }}
+      <div class="cap">Mark &middot; avatar, favicon</div>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top:16px">
+    <div class="panel" style="flex:1.75; display:flex; align-items:center; gap:28px">
+      <div style="flex:none; border:1.5px dashed {{ c.marmalade }}; border-radius:6px; padding:{{ (brand.logo.mark_size * brand.logo.clearspace_ratio)|round|int }}px">
+        <div class="lockup">
+          {{ glyph.cat(c.marmalade, c.sand, 30) }}
+          <div class="word" style="font-size:25px"><span style="color:{{ c.ink }}">Kitty</span><span style="color:{{ c.marmalade_deep }}">News</span></div>
+        </div>
+      </div>
+      <div style="font-size:13px; line-height:1.65; color:{{ c.muted }}">
+        <strong style="color:{{ c.ink }}">Clear space</strong><br>
+        Keep free space of at least <strong>{{ brand.logo.clearspace_ratio }}&times;</strong> the mark
+        height on every side. Nothing crosses the dashed boundary.
+      </div>
+    </div>
+    <div class="panel" style="flex:1; display:flex; align-items:center; gap:20px">
+      {{ glyph.cat(c.marmalade, c.sand, 34) }}
+      <div style="font-size:13px; line-height:1.65; color:{{ c.muted }}">
+        <strong style="color:{{ c.ink }}">Minimum size</strong><br>
+        Full lockup never below <strong>{{ brand.logo.min_width_px }}px</strong> wide.
+        Under that, use the mark alone.
+      </div>
+    </div>
+  </div>
+
+  <h2>02 &nbsp;Colour</h2>
+  <div class="swatches">
+    {% for name, hex, role, tag in swatches %}
+    <div class="sw">
+      <div class="chip" style="background:{{ hex }}"></div>
+      <div class="meta">
+        <div class="nm">{{ name }}</div>
+        <div class="hx">{{ hex }}</div>
+        <div class="rl">{{ role }}</div>
+        <span class="tag {{ 'warn' if tag in ('marks only','large text','lines only') else '' }}">{{ tag }}</span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <h2>03 &nbsp;Typography</h2>
+  <div class="row">
+    <div class="panel">
+      <div class="display" style="font-size:30px; font-weight:900; line-height:1.15">
+        The world, briefly.
+      </div>
+      <div class="cap">Fraunces &middot; display &amp; numerals &middot; PNG assets only</div>
+      <div style="font-size:14px; line-height:1.6; margin-top:16px">
+        Body copy sets in Inter inside graphics. Rasterised in Chromium, so any
+        webfont is safe here.
+      </div>
+      <div class="cap">Inter &middot; labels &amp; body &middot; PNG assets only</div>
+    </div>
+    <div class="panel">
+      <div style="font-family:{{ t.email.display }}; font-size:28px; font-weight:700; line-height:1.15">
+        The world, briefly.
+      </div>
+      <div class="cap">Georgia &middot; email headings</div>
+      <div style="font-family:{{ t.email.body }}; font-size:14px; line-height:1.6; margin-top:16px">
+        Email HTML cannot rely on webfonts, so the email uses web-safe stacks
+        picked to sit close to the PNG typography.
+      </div>
+      <div class="cap">System sans &middot; email body</div>
+    </div>
+  </div>
+  <div class="panel" style="margin-top:14px; background:{{ c.paper }}; border:1px solid {{ c.rule }}">
+    {% for k, v in [('display', t.scale.display), ('h1', t.scale.h1), ('h2', t.scale.h2), ('h3', t.scale.h3), ('body', t.scale.body), ('small', t.scale.small), ('caption', t.scale.caption)] %}
+    <div class="spec">
+      <div class="lbl">{{ k }}</div>
+      <div class="px">{{ v }}px</div>
+      <div class="display" style="font-size:{{ [v, 40]|min }}px; font-weight:{{ 900 if v >= 34 else 600 }}; color:{{ c.ink }}">
+        KittyNews {{ '0123' if v >= 24 else 'the world, briefly' }}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <h2>04 &nbsp;Chart palette</h2>
+  <div class="panel" style="background:{{ brand.chart.surface }}">
+    <div class="ramp">
+      {% for hex in brand.chart.ramp %}
+      <div class="slot">
+        <div class="bar" style="background:{{ hex }}; height:{{ 76 - loop.index0 * 11 }}px; margin-top:{{ loop.index0 * 11 }}px"></div>
+        <div class="slotn">{{ loop.index }} &middot; {{ brand.chart.ramp_names[loop.index0] }}</div>
+        <div class="slothex">{{ hex }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="cap" style="margin-top:16px">
+      Assigned in fixed order, never cycled &middot; validated for colour-blind separation
+    </div>
+  </div>
+  <ul style="margin-top:14px">
+    {% for rule in brand.chart._rules %}<li>{{ rule }}</li>{% endfor %}
+  </ul>
+
+  <h2>05 &nbsp;Voice</h2>
+  <ul>
+    {% for line in brand.meta.voice %}<li>{{ line }}</li>{% endfor %}
+  </ul>
+
+  <h2>06 &nbsp;Do &amp; don't</h2>
+  <div class="dos">
+    <div class="do">
+      <h3>Do</h3>
+      <ul>
+        <li>Let the mark carry the personality; keep the words straight.</li>
+        <li>Label every chart value directly — marmalade sits below 3:1 on sand.</li>
+        <li>Repeat the key number in body copy, in case images never load.</li>
+        <li>Use <strong>marmalade_deep</strong> for any accent that is text.</li>
+      </ul>
+    </div>
+    <div class="dont">
+      <h3>Don't</h3>
+      <ul>
+        <li>Set body text or links in <strong>marmalade</strong> — it fails contrast.</li>
+        <li>Recolour, rotate, or outline the cat mark.</li>
+        <li>Use pure #FFFFFF or #000000 — they invert harshly in dark mode.</li>
+        <li>Ship an infographic as SVG; Outlook renders nothing.</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    Generated from <strong>brand/brand.json</strong> — the single source of truth.
+    Edit that file and re-run the render commands in <strong>brand/README.md</strong>;
+    never hand-edit these PNGs.<br>
+    Chart ramp derived and validated automatically — see <strong>_provenance</strong> in brand.json to reproduce.
+  </footer>
+
+</div>
+</body>
+</html>

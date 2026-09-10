@@ -1,0 +1,124 @@
+{
+  "_readme": [
+    "Single source of truth for KittyNews. The logo, the guidelines sheet, every",
+    "infographic and the email shell all render from this file. Change a value here",
+    "and re-run the render commands in brand/README.md — nothing is hardcoded.",
+    "",
+    "Colour values are DERIVED, not eyeballed. See _provenance for how, and re-run",
+    "the validator before changing any of them."
+  ],
+
+  "meta": {
+    "name": "KittyNews",
+    "tagline": "The world, briefly. With whiskers.",
+    "voice": [
+      "Editorial first, playful second. A real news brand that happens to have a cat.",
+      "Short declarative sentences. Lead with the finding, not the setup.",
+      "Never cutesy in the copy — the mark carries the personality so the words don't have to.",
+      "Every number is attributed. No claim without a source."
+    ]
+  },
+
+  "color": {
+    "ink": "#1A1614",
+    "paper": "#FDFBF7",
+    "sand": "#F5EBDF",
+    "muted": "#6B625C",
+    "rule": "#E3D5C4",
+
+    "marmalade": "#E8743B",
+    "marmalade_deep": "#A8481A",
+    "teal": "#149184",
+    "teal_deep": "#0F6E64",
+
+    "_roles": {
+      "ink": "Body text, wordmark. Warm near-black — never #000, which inverts harshly.",
+      "paper": "Email background. Warm cream, not #FFFFFF, so dark-mode inversion is graceful.",
+      "sand": "Infographic card grounds and pull-quote backgrounds.",
+      "muted": "Captions, source lines, footer. 5.76:1 on paper — safe for body text.",
+      "rule": "Hairlines and table borders only. Never text.",
+      "marmalade": "IDENTITY ONLY — the cat mark, chart slot 1, rules, borders. NOT for text: 2.91:1 on paper fails WCAG.",
+      "marmalade_deep": "The text-safe accent. Links, display numerals, accent headings. 5.63:1 on paper.",
+      "teal": "Chart slot 2 and accent fills. Large text only (3.75:1).",
+      "teal_deep": "Text-safe teal. 5.92:1 on paper."
+    }
+  },
+
+  "chart": {
+    "surface": "#F5EBDF",
+    "ramp": ["#E8743B", "#149184", "#C0453A", "#3D7AB8", "#4E7A2F"],
+    "ramp_names": ["marmalade", "teal", "brick", "blue", "forest"],
+    "grid": "#E3D5C4",
+    "axis_text": "#6B625C",
+    "_rules": [
+      "Assign slots in fixed order, never cycled. A 6th series folds into 'Other'.",
+      "Slot 1 (marmalade) sits at 2.55:1 on sand — below 3:1 — so direct value labels are mandatory on every chart, not optional. That is the required relief channel.",
+      "Single-series charts need no legend; the title names the series.",
+      "Never a dual-axis chart. Two measures of different scale means two charts."
+    ]
+  },
+
+  "type": {
+    "_note": "Split by medium. PNGs are rasterised in real Chromium so any webfont is safe. Email HTML cannot rely on webfonts, so it uses web-safe stacks chosen to sit close to the PNG typography.",
+    "png": {
+      "display": "'Fraunces', Georgia, serif",
+      "body": "'Inter', -apple-system, 'Segoe UI', sans-serif",
+      "webfont_url": "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Inter:wght@400;500;600;700&display=swap"
+    },
+    "email": {
+      "display": "Georgia, 'Times New Roman', serif",
+      "body": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+    },
+    "scale": {
+      "display": 76,
+      "h1": 34,
+      "h2": 24,
+      "h3": 19,
+      "body": 16,
+      "small": 14,
+      "caption": 12
+    }
+  },
+
+  "layout": {
+    "email_width": 600,
+    "card_width": 560,
+    "card_padding": 36,
+    "radius": 18,
+    "radius_small": 10,
+    "gutter": 24,
+    "retina_scale": 2
+  },
+
+  "logo": {
+    "mark_size": 46,
+    "wordmark_size": 38,
+    "lockup_gap": 14,
+    "clearspace_ratio": 0.5,
+    "min_width_px": 120
+  },
+
+  "_provenance": {
+    "date": "2026-09-10",
+    "chart_ramp": [
+      "Derived by brute-force search over brand-adjacent hue families, scored by the",
+      "dataviz skill's validate_palette.js (six checks) against the sand surface.",
+      "107,520 orderings tested; teal pinned to slot 2 for brand coherence.",
+      "Result: lightness band PASS, chroma floor PASS, CVD separation PASS",
+      "(worst adjacent dE 9.6 protan, target >=8), normal-vision floor PASS (20.1,",
+      "target >=15), contrast RELIEF (marmalade 2.55:1 -> direct labels required).",
+      "Re-run: node scripts/validate_palette.js \"#E8743B,#149184,#C0453A,#3D7AB8,#4E7A2F\" --mode light --surface \"#F5EBDF\""
+    ],
+    "text_colors": [
+      "WCAG contrast measured on both paper and sand. marmalade #E8743B scored 2.91",
+      "on paper — fails even the 3:1 large-text bar — so it is barred from text and",
+      "marmalade_deep #A8481A (5.63:1) carries every accent text role instead."
+    ],
+    "dark_mode": [
+      "Infographics ship as PNGs. Gmail and Outlook invert HTML backgrounds but do",
+      "NOT invert images, so the ramp only ever meets the sand surface baked into the",
+      "PNG and is validated in light mode alone. Dark-mode robustness is handled in",
+      "the email chrome: warm near-neutrals (paper/ink) instead of pure #FFF/#000."
+    ]
+  }
+}

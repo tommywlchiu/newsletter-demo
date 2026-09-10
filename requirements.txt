@@ -1,2 +1,15 @@
 python-dotenv>=1.0
 requests>=2.32
+
+# Templating — drives every HTML asset and the MJML source
+jinja2>=3.1
+
+# Email HTML: pure-Python MJML compiler (no Node needed)
+mjml>=0.12
+
+# Rasterising brand assets + infographics (email clients can't render SVG)
+playwright>=1.48        # after install: python -m playwright install chromium
+pillow>=11.0            # PNG palette quantisation — cuts card size ~70%
+
+# Plain-text alternative for multipart email
+html2text>=2024.2

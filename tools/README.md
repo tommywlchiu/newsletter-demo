@@ -47,7 +47,10 @@ Tools import `common` as a sibling module, so run them from anywhere —
 
 ## Index
 
-_No tools yet. Add each one here with a one-line description as it's built._
-
 | Tool | Does | Used by |
 | ---- | ---- | ------- |
+| `render_png.py` | Jinja2 HTML → headless Chromium → PNG at 2×, palette-quantised | `build_newsletter`, `brand/` |
+| `research_topic.py` | Perplexity Agent API → briefing + archived citation corpus | `build_newsletter` |
+| `check_claims.py` | Fails if any infographic figure is absent from the corpus | `build_newsletter` |
+| `build_email.py` | Jinja2 → MJML → email HTML + plain text + local preview | `build_newsletter` |
+| `gmail_draft.py` | MIME with inline CID images → Gmail draft via IMAP (or SMTP send) | `build_newsletter` |

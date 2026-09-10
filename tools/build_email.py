@@ -38,21 +38,66 @@ def compile_mjml(source: str) -> str:
     return html
 
 
-def to_plaintext(html: str) -> str:
+def _inline_to_text(fragment: str) -> str:
+    """Flatten one paragraph of inline markup (<strong>, <a>, ...) to plain text.
+
+    Applied per paragraph rather than to the whole document on purpose: run
+    html2text over compiled MJML and it renders the layout tables as markdown
+    table soup ("| | |", "---"), which is unreadable.
+    """
     try:
         import html2text
     except ImportError as exc:
         raise ToolError("html2text is not installed. Run: pip install html2text") from exc
 
     h = html2text.HTML2Text()
-    h.ignore_images = True   # cid: refs are meaningless in a text part
-    h.body_width = 0         # let the client wrap; hard wraps look broken on mobile
+    h.body_width = 0          # let the client wrap; hard wraps break on mobile
     h.ignore_emphasis = True
-    h.protect_links = True
-    text = h.handle(html)
-    # MJML's spacer tables leave runs of blank lines behind.
-    text = re.sub(r"\n{3,}", "\n\n", text).strip()
-    return text + "\n"
+    h.ignore_images = True
+    h.inline_links = False
+    h.ignore_links = True     # sources are listed in full at the end
+    return h.handle(fragment).strip()
+
+
+def to_plaintext(data: dict) -> str:
+    """Compose the text alternative from the issue data, not from the built HTML.
+
+    This part has to make sense on its own — some clients show it, and it helps
+    deliverability. Image alt text is included inline so a text-only reader still
+    gets what each infographic said.
+    """
+    out: list[str] = []
+    masthead = "KITTYNEWS"
+    if data.get("issue"):
+        masthead += f"  |  ISSUE {data['issue']}"
+    if data.get("date"):
+        masthead += f"  |  {str(data['date']).upper()}"
+    out += [masthead, "=" * min(len(masthead), 72), "", _inline_to_text(data["intro"]), ""]
+
+    for story in data["stories"]:
+        out += ["-" * 72, story["heading"].upper()]
+        if story.get("dek"):
+            out += [_inline_to_text(story["dek"])]
+        out += [""]
+        for para in story["body"]:
+            out += [_inline_to_text(para), ""]
+        image = story.get("image")
+        if image and image.get("alt"):
+            out += [f"[Infographic: {image['alt']}]", ""]
+
+    out += ["-" * 72, "SOURCES", ""]
+    for i, src in enumerate(data["sources"], 1):
+        out += [f"{i}. {src['label']}", f"   {src['url']}"]
+    out += [""]
+
+    if data.get("signoff"):
+        out += [_inline_to_text(data["signoff"]), ""]
+
+    tagline = "The world, briefly. With whiskers."
+    out += [f"KittyNews - {tagline}", "You're getting this because you asked to."]
+
+    text = "\n".join(out)
+    return re.sub(r"\n{3,}", "\n\n", text).strip() + "\n"
 
 
 def main() -> int:
@@ -99,7 +144,7 @@ def main() -> int:
     text_path = None
     if args.text_out:
         text_path = Path(args.text_out).resolve()
-        write_text(text_path, to_plaintext(html))
+        write_text(text_path, to_plaintext(data))
 
     cids = sorted(set(CID_RE.findall(html)))
     log(f"{out.name}: {len(html):,} bytes, {len(cids)} inline image(s)")

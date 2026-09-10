@@ -20,7 +20,6 @@ Copy `_template.md` when starting a new one.
 
 ## Index
 
-_No workflows yet._
-
 | Workflow | Outcome | Tools used |
 | -------- | ------- | ---------- |
+| `build_newsletter.md` | A researched, KittyNews-branded issue sitting in Gmail as a draft | `research_topic`, `check_claims`, `render_png`, `build_email`, `gmail_draft` |

@@ -1,0 +1,55 @@
+{# Horizontal bar chart.
+   data: { title, subtitle?, eyebrow?, source, bars: [{label, value, display?, slot?}], footnote? }
+
+   Horizontal because category names need room — at 600px email width, rotated
+   x-axis labels are unreadable.
+
+   Per brand.json chart rules: every bar carries a direct value label. Slot 1 sits
+   at 2.55:1 on sand, so labels are the mandatory relief channel, not decoration.
+   Values wear ink, never the series colour — the bar already carries identity. #}
+{% extends 'templates/infographics/_base.html.j2' %}
+{% set ramp = brand.chart.ramp %}
+{% set peak = bars | map(attribute='value') | max %}
+
+{% block styles %}
+  .rows { display: flex; flex-direction: column; gap: 14px; }
+  .row { display: flex; align-items: center; gap: 14px; }
+  .name {
+    width: 150px; flex: none; font-size: {{ t.scale.small }}px;
+    line-height: 1.3; text-align: right; color: {{ c.ink }};
+  }
+  .track { flex: 1; display: flex; align-items: center; gap: 10px; }
+  .bar {
+    height: 22px;
+    /* 4px rounded data-end, square at the baseline it grows from */
+    border-radius: 0 4px 4px 0;
+    min-width: 3px;
+  }
+  .val {
+    font-family: {{ t.png.display }}; font-weight: 900;
+    font-size: {{ t.scale.small }}px; color: {{ c.ink }};
+    white-space: nowrap;
+  }
+  .foot {
+    margin-top: 18px; font-size: {{ t.scale.caption }}px;
+    color: {{ c.muted }}; line-height: 1.5;
+  }
+{% endblock %}
+
+{% block content %}
+<div class="rows">
+  {% for b in bars %}
+  <div class="row">
+    <div class="name">{{ b.label }}</div>
+    <div class="track">
+      <div class="bar" style="
+        width: {{ (b.value / peak * 100) | round(2) }}%;
+        background: {{ ramp[(b.slot | default(1)) - 1] }};
+      "></div>
+      <div class="val">{{ b.display | default(b.value) }}</div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% if footnote is defined and footnote %}<div class="foot">{{ footnote }}</div>{% endif %}
+{% endblock %}

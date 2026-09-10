@@ -1,0 +1,48 @@
+{# Comparison table.
+   data: { title, subtitle?, eyebrow?, source, columns: [str], rows: [{cells: [str], highlight?}] }
+
+   First column is the row label; the rest compare. A row may set highlight:true
+   to mark the recommended / winning option. #}
+{% extends 'templates/infographics/_base.html.j2' %}
+
+{% block styles %}
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    font-size: 11px; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; color: {{ c.muted }};
+    text-align: left; padding: 0 12px 10px 0; vertical-align: bottom;
+  }
+  th:first-child { width: 34%; }
+  td {
+    font-size: {{ t.scale.small }}px; line-height: 1.45;
+    padding: 12px 12px 12px 0;
+    border-top: 1px solid {{ c.rule }};
+    vertical-align: top;
+  }
+  td:first-child { font-weight: 600; }
+  tr.hl td {
+    background: {{ c.paper }};
+    border-top-color: {{ c.marmalade }};
+  }
+  tr.hl td:first-child {
+    box-shadow: inset 3px 0 0 {{ c.marmalade }};
+    padding-left: 12px;
+    border-radius: {{ L.radius_small }}px 0 0 {{ L.radius_small }}px;
+  }
+  tr.hl td:last-child { border-radius: 0 {{ L.radius_small }}px {{ L.radius_small }}px 0; }
+{% endblock %}
+
+{% block content %}
+<table>
+  <thead>
+    <tr>{% for col in columns %}<th>{{ col }}</th>{% endfor %}</tr>
+  </thead>
+  <tbody>
+    {% for r in rows %}
+    <tr class="{{ 'hl' if r.highlight is defined and r.highlight else '' }}">
+      {% for cell in r.cells %}<td>{{ cell }}</td>{% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

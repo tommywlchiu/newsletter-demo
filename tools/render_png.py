@@ -14,36 +14,7 @@ import argparse
 import json
 from pathlib import Path
 
-from common import ROOT, ToolError, emit, log, read_json, run, tmp_path
-
-BRAND_FILE = ROOT / "brand" / "brand.json"
-
-
-def load_brand() -> dict:
-    if not BRAND_FILE.exists():
-        raise ToolError(
-            f"{BRAND_FILE} is missing. It's the single source of truth for colours "
-            f"and type — every template reads it. Create it before rendering."
-        )
-    return read_json(BRAND_FILE)
-
-
-def render_html(template: Path, context: dict) -> str:
-    try:
-        from jinja2 import Environment, FileSystemLoader, StrictUndefined
-    except ImportError as exc:  # pragma: no cover
-        raise ToolError("jinja2 is not installed. Run: pip install jinja2") from exc
-
-    if not template.exists():
-        raise ToolError(f"Template not found: {template}")
-
-    env = Environment(
-        loader=FileSystemLoader([str(ROOT), str(template.parent)]),
-        undefined=StrictUndefined,  # fail loudly on a typo'd token, don't render blank
-        autoescape=False,
-    )
-    tpl = env.get_template(template.relative_to(ROOT).as_posix())
-    return tpl.render(**context)
+from common import ToolError, emit, log, read_json, render_template, run, tmp_path
 
 
 def screenshot(
@@ -148,13 +119,11 @@ def main() -> int:
         except json.JSONDecodeError as exc:
             raise ToolError(f"--data is not valid JSON: {exc}") from exc
 
-    context["brand"] = load_brand()
-
     template = Path(args.template).resolve()
     out = Path(args.out).resolve()
 
     log(f"Rendering {template.name} -> {out.name}")
-    html = render_html(template, context)
+    html = render_template(template, context)
     w, h = screenshot(
         html,
         out,

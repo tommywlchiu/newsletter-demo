@@ -1,0 +1,133 @@
+{# KittyNews email shell. Jinja2 -> MJML -> table-based email HTML.
+
+   data: {
+     issue, date, subject, preheader,
+     intro,                          # 1-2 sentence hook
+     stories: [{ heading, dek?, body: [paragraph, ...], image?: {cid, alt, caption?} }],
+     sources: [{ label, url }],
+     signoff?
+   }
+
+   Images are referenced as cid: and attached by tools/gmail_draft.py. Every one
+   carries alt text, because a large share of clients block images until the reader
+   asks for them — and the body copy is expected to restate any figure that matters. #}
+{% set c = brand.color %}
+{% set t = brand.type %}
+{% set L = brand.layout %}
+<mjml>
+  <mj-head>
+    <mj-title>{{ subject }}</mj-title>
+    <mj-preview>{{ preheader }}</mj-preview>
+    <mj-raw>
+      <meta name="color-scheme" content="light dark">
+      <meta name="supported-color-schemes" content="light dark">
+    </mj-raw>
+    <mj-attributes>
+      <mj-all font-family="{{ t.email.body }}" />
+      <mj-text font-size="{{ t.scale.body }}px" line-height="1.62" color="{{ c.ink }}" />
+      <mj-section background-color="{{ c.paper }}" padding="0" />
+      <mj-column padding="0" />
+    </mj-attributes>
+    <mj-style>
+      a { color: {{ c.marmalade_deep }}; }
+      .kn-h2 { font-family: {{ t.email.display }}; }
+      /* Apple Mail is the only client that honours this; Gmail and Outlook apply
+         their own partial inversion, which the warm near-neutral palette absorbs. */
+      @media (prefers-color-scheme: dark) {
+        .kn-shell { background: {{ c.ink }} !important; }
+        .kn-ink, .kn-ink * { color: {{ c.paper }} !important; }
+        .kn-muted, .kn-muted * { color: #B9AFA6 !important; }
+      }
+    </mj-style>
+  </mj-head>
+
+  <mj-body background-color="{{ c.paper }}" width="{{ L.email_width }}px" css-class="kn-shell">
+
+    {# ---- masthead ---- #}
+    <mj-section padding="28px 24px 0">
+      <mj-column>
+        <mj-image src="cid:logo" alt="KittyNews" width="200px" align="left" padding="0" />
+      </mj-column>
+    </mj-section>
+
+    <mj-section padding="14px 24px 0">
+      <mj-column>
+        <mj-text css-class="kn-muted" font-size="{{ t.scale.caption }}px" color="{{ c.muted }}" letter-spacing="1.4px" padding="0">
+          {{ 'ISSUE %s'|format(issue) if issue is defined and issue else '' }}{% if issue is defined and issue %} &nbsp;&middot;&nbsp; {% endif %}{{ date | upper }}
+        </mj-text>
+        <mj-divider border-width="2px" border-color="{{ c.ink }}" padding="12px 0 0" />
+      </mj-column>
+    </mj-section>
+
+    {# ---- intro ---- #}
+    <mj-section padding="26px 24px 0">
+      <mj-column>
+        <mj-text css-class="kn-ink" font-size="{{ t.scale.h3 }}px" line-height="1.5">
+          {{ intro }}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    {# ---- stories ---- #}
+    {% for s in stories %}
+    <mj-section padding="{{ '30px' if loop.first else '34px' }} 24px 0">
+      <mj-column>
+        <mj-text css-class="kn-ink kn-h2" font-family="{{ t.email.display }}" font-size="{{ t.scale.h2 }}px" font-weight="700" line-height="1.28" padding="0 0 10px">
+          {{ s.heading }}
+        </mj-text>
+        {% if s.dek is defined and s.dek %}
+        <mj-text css-class="kn-muted" font-size="{{ t.scale.small }}px" color="{{ c.muted }}" line-height="1.55" padding="0 0 12px">
+          {{ s.dek }}
+        </mj-text>
+        {% endif %}
+        {% for p in s.body %}
+        <mj-text css-class="kn-ink" padding="0 0 12px">{{ p }}</mj-text>
+        {% endfor %}
+      </mj-column>
+    </mj-section>
+
+    {% if s.image is defined and s.image %}
+    <mj-section padding="8px 24px 0">
+      <mj-column>
+        <mj-image src="cid:{{ s.image.cid }}" alt="{{ s.image.alt }}" width="{{ L.card_width }}px" padding="0" />
+        {% if s.image.caption is defined and s.image.caption %}
+        <mj-text css-class="kn-muted" font-size="{{ t.scale.caption }}px" color="{{ c.muted }}" align="center" padding="9px 0 0">
+          {{ s.image.caption }}
+        </mj-text>
+        {% endif %}
+      </mj-column>
+    </mj-section>
+    {% endif %}
+    {% endfor %}
+
+    {# ---- sources ---- #}
+    <mj-section padding="36px 24px 0">
+      <mj-column>
+        <mj-divider border-width="1px" border-color="{{ c.rule }}" padding="0 0 16px" />
+        <mj-text css-class="kn-muted" font-size="{{ t.scale.caption }}px" color="{{ c.muted }}" letter-spacing="1.4px" padding="0 0 10px">
+          SOURCES
+        </mj-text>
+        {% for src in sources %}
+        <mj-text css-class="kn-muted" font-size="{{ t.scale.caption }}px" color="{{ c.muted }}" line-height="1.55" padding="0 0 6px">
+          {{ loop.index }}. <a href="{{ src.url }}">{{ src.label }}</a>
+        </mj-text>
+        {% endfor %}
+      </mj-column>
+    </mj-section>
+
+    {# ---- footer ---- #}
+    <mj-section padding="30px 24px 36px">
+      <mj-column>
+        <mj-divider border-width="1px" border-color="{{ c.rule }}" padding="0 0 18px" />
+        {% if signoff is defined and signoff %}
+        <mj-text css-class="kn-ink" font-size="{{ t.scale.small }}px" padding="0 0 14px">{{ signoff }}</mj-text>
+        {% endif %}
+        <mj-text css-class="kn-muted" font-size="{{ t.scale.caption }}px" color="{{ c.muted }}" line-height="1.6" padding="0">
+          <strong>KittyNews</strong> &middot; {{ brand.meta.tagline }}<br>
+          You're getting this because you asked to.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+  </mj-body>
+</mjml>

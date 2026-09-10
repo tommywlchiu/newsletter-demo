@@ -1,0 +1,44 @@
+{# Stat card — 1 to 3 headline figures.
+   data: { title, subtitle?, eyebrow?, source, stats: [{value, label, note?}] }
+
+   Display numerals use marmalade_deep, never marmalade: at display size the
+   brighter tone still measures 2.55:1 on sand, which fails even large-text contrast. #}
+{% extends 'templates/infographics/_base.html.j2' %}
+
+{% block styles %}
+  .stats { display: flex; gap: {{ L.gutter }}px; align-items: stretch; }
+  /* column layout + margin-top:auto keeps the notes on a common baseline even
+     when one label wraps to two lines */
+  .stat { flex: 1; display: flex; flex-direction: column; }
+  .stats.multi .stat + .stat {
+    padding-left: {{ L.gutter }}px;
+    border-left: 1px solid {{ c.rule }};
+  }
+  .value {
+    font-family: {{ t.png.display }};
+    font-weight: 900;
+    font-size: {{ t.scale.display if stats|length == 1 else 44 }}px;
+    line-height: .96; letter-spacing: -.03em;
+    color: {{ c.marmalade_deep }};
+  }
+  .label {
+    font-size: {{ t.scale.small }}px; font-weight: 600;
+    margin-top: 12px; line-height: 1.35;
+  }
+  .note {
+    font-size: {{ t.scale.caption }}px; color: {{ c.muted }};
+    margin-top: auto; padding-top: 5px; line-height: 1.45;
+  }
+{% endblock %}
+
+{% block content %}
+<div class="stats {{ 'multi' if stats|length > 1 else '' }}">
+  {% for s in stats %}
+  <div class="stat">
+    <div class="value">{{ s.value }}</div>
+    <div class="label">{{ s.label }}</div>
+    {% if s.note is defined and s.note %}<div class="note">{{ s.note }}</div>{% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

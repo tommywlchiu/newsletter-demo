@@ -131,6 +131,46 @@ def write_text(path: Path, text: str) -> Path:
     return path
 
 
+BRAND_FILE = ROOT / "brand" / "brand.json"
+
+
+def load_brand() -> dict[str, Any]:
+    """Brand tokens, injected into every template as `brand`.
+
+    Single source of truth for colour and type — a template should never hardcode
+    a hex value.
+    """
+    if not BRAND_FILE.exists():
+        raise ToolError(
+            f"{BRAND_FILE} is missing. Every template reads it for colour and type."
+        )
+    return read_json(BRAND_FILE)
+
+
+def render_template(template: Path, context: dict[str, Any]) -> str:
+    """Render a Jinja2 template from the project root, with `brand` pre-injected.
+
+    StrictUndefined is deliberate: a typo'd token should stop the build, not
+    silently render an empty string into a published asset.
+    """
+    try:
+        from jinja2 import Environment, FileSystemLoader, StrictUndefined
+    except ImportError as exc:
+        raise ToolError("jinja2 is not installed. Run: pip install jinja2") from exc
+
+    template = Path(template).resolve()
+    if not template.exists():
+        raise ToolError(f"Template not found: {template}")
+
+    env = Environment(
+        loader=FileSystemLoader([str(ROOT), str(template.parent)]),
+        undefined=StrictUndefined,
+        autoescape=False,
+    )
+    context = {**context, "brand": context.get("brand") or load_brand()}
+    return env.get_template(template.relative_to(ROOT).as_posix()).render(**context)
+
+
 def run(main_fn) -> None:
     """Wrap a tool's main() so expected failures print cleanly.
 

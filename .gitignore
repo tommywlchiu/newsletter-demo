@@ -1,0 +1,21 @@
+# Secrets — never commit
+.env
+credentials.json
+token.json
+*.pem
+
+# Disposable processing files
+# (.tmp/* not .tmp/ — git can't un-ignore a file inside an ignored directory)
+.tmp/*
+!.tmp/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# OS / editor
+.DS_Store
+Thumbs.db

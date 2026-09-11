@@ -1,0 +1,11 @@
+{
+  "eyebrow": "The reliability ceiling",
+  "title": "Every model tested collapsed within 16 steps",
+  "subtitle": "Short benchmark scores hide what happens when tasks require many dependent actions.",
+  "stats": [
+    { "value": "16", "label": "Steps to collapse", "note": "Near-perfect to near-zero" },
+    { "value": "10,664", "label": "Trajectories analysed", "note": "Submitted 31 Aug 2026" },
+    { "value": "9", "label": "Models tested", "note": "1.2B to 671B, plus 3 proprietary" }
+  ],
+  "source": "arXiv 2609.01660 — long-horizon degradation study (preprint, not peer reviewed)"
+}

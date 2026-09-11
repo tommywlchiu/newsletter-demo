@@ -115,11 +115,12 @@ def main() -> int:
     recipients = args.to or []
     if not recipients:
         default_to = get_env("NEWSLETTER_DEFAULT_TO")
-        if not default_to:
-            raise ToolError(
-                "No recipient. Pass --to, or set NEWSLETTER_DEFAULT_TO in .env."
-            )
-        recipients = [r.strip() for r in default_to.split(",") if r.strip()]
+        if default_to:
+            recipients = [r.strip() for r in default_to.split(",") if r.strip()]
+        else:
+            # Addressing it to yourself is the right default for a review draft.
+            recipients = [sender]
+            log("No --to and no NEWSLETTER_DEFAULT_TO; addressing the draft to you.")
 
     html = Path(args.html).read_text(encoding="utf-8")
     text = Path(args.text).read_text(encoding="utf-8")

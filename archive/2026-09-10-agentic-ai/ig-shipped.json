@@ -1,0 +1,11 @@
+{
+  "eyebrow": "What actually shipped",
+  "title": "Four weeks of plumbing, not demos",
+  "events": [
+    { "when": "20 Aug 2026", "what": "GitLab puts agents in single-tenant Dedicated", "detail": "Agentic workloads inside the isolated environment regulated customers already use." },
+    { "when": "26 Aug 2026", "what": "Salesforce reports 7.0 billion agentic work units", "detail": "3.2 billion of them in fiscal Q2 alone — up 97% quarter over quarter." },
+    { "when": "Aug 2026", "what": "AWS Agent Registry goes generally available", "detail": "Governed discovery of agents, tools, skills and MCP servers across 5 regions." },
+    { "when": "10 Sep 2026", "what": "OpenAI Agents API enters public beta", "detail": "Today. The pattern is identity, tenancy and tool permissions — not new model capability.", "now": true }
+  ],
+  "source": "Vendor announcements: GitLab, Salesforce investor relations, AWS, OpenAI"
+}

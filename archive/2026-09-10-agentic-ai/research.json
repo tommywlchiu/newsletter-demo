@@ -1,0 +1,1042 @@
+{
+  "topic": "agentic AI in production: what is actually shipping, where deployments are failing, and what changed in the last few months",
+  "preset": "medium",
+  "recency": "month",
+  "model": "openai/gpt-5.6-luna",
+  "response_id": "resp_8bec102b-08e4-4c36-b9a0-b757c86e3387",
+  "retrieved_at": "2026-09-10T19:27:53-0700",
+  "elapsed_seconds": 96.8,
+  "briefing": "# Research: agentic AI in production: what is actually shipping, where deployments are failing, and what changed in the last few months\n\nAgentic AI is shipping in production, but mostly as bounded systems inside customer service, software development, and workflow automation\u2014not as unrestricted autonomous employees. The latest evidence shows a widening gap between experimentation and governed scale: context quality, long-horizon reliability, human oversight, and cost control are the main deployment constraints, while vendors are spending the past few months productizing registries, tenancy, tool permissions, and agent APIs.\n\n## 1. Most organizations are experimenting or deploying; relatively few have scaled autonomous workflows.\n\nThe production story is a narrow funnel, not a wholesale shift to autonomous digital workers. Deloitte\u2019s current survey found 42% of participating organizations had tested or deployed AI agents, but only 15% had scaled orchestrated, multi-agent adoption; just 5% said their business processes were highly prepared for agents, and 70% said they did not feel able to trust and govern them. McKinsey\u2019s broader figures are more favorable but use a looser definition: 40% of respondents at organizations above $1 billion in revenue said they were scaling agents in at least one function, compared with 22% at smaller organizations. The writer should distinguish \u201chas an agent project,\u201d \u201chas deployed an agent,\u201d and \u201chas scaled a governed multi-agent workflow.\u201d\n\n- **42%** \u2014 Organizations that had tested or deployed AI agents in Deloitte\u2019s April\u2013June 2026 survey of 501 U.S. senior-manager-to-C-suite respondents  \n  <https://www.deloitte.com/us/en/about/press-room/deloitte-survey-examines-ai-readiness-agentic-ai-success.html>\n- **15%** \u2014 Organizations reporting scaled, orchestrated, multi-agent adoption  \n  <https://www.deloitte.com/us/en/about/press-room/deloitte-survey-examines-ai-readiness-agentic-ai-success.html>\n- **5%** \u2014 Organizations saying their business processes were highly prepared for AI agents  \n  <https://www.deloitte.com/us/en/about/press-room/deloitte-survey-examines-ai-readiness-agentic-ai-success.html>\n- **70%** \u2014 Leaders saying they did not feel able to trust and govern agents  \n  <https://www.deloitte.com/us/en/about/press-room/deloitte-survey-examines-ai-readiness-agentic-ai-success.html>\n- **40%** \u2014 Respondents at organizations with more than $1 billion in annual revenue reporting that they were scaling AI agents in at least one business function  \n  <https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai?page=58&onlycontent=1>\n- **22%** \u2014 Respondents at smaller organizations reporting that they were scaling AI agents in at least one function  \n  <https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai?page=58&onlycontent=1>\n- **1,719 respondents in 97 countries** \u2014 McKinsey global survey sample and geographic coverage; fieldwork ran May 4\u2013June 8, 2026  \n  <https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai?page=58&onlycontent=1>\n\n  - source: <https://www.deloitte.com/us/en/about/press-room/deloitte-survey-examines-ai-readiness-agentic-ai-success.html>\n  - source: <https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai?page=58&onlycontent=1>\n\n## 2. What is actually shipping: agents embedded in business systems, especially service and software workflows.\n\nThere is concrete production shipping, but it is concentrated in bounded, auditable work\u2014customer-service actions, record updates, workflow triggers, coding, and DevOps\u2014rather than unrestricted autonomy. Salesforce\u2019s own fiscal results provide unusually direct production telemetry: the company says its agents executed billions of discrete tasks across Agentforce and Slack. Recent product releases also show the market moving from standalone chat interfaces toward agent registries, single-tenant deployment, tool permissions, and developer APIs\u2014the operational layer needed to put agents inside existing systems.\n\n- **7.0 billion AWUs** \u2014 Agentic Work Units delivered to date across Salesforce Agentforce and Slack, as reported August 26, 2026  \n  <https://investor.salesforce.com/news/news-details/2026/Salesforce-Delivers-Record-Second-Quarter-Fiscal-2027-Results/default.aspx>\n- **3.2 billion AWUs** \u2014 Agentic Work Units delivered in Salesforce fiscal Q2 2027  \n  <https://investor.salesforce.com/news/news-details/2026/Salesforce-Delivers-Record-Second-Quarter-Fiscal-2027-Results/default.aspx>\n- **97% quarter over quarter** \u2014 Growth in Salesforce\u2019s reported Q2 FY27 Agentic Work Units  \n  <https://investor.salesforce.com/news/news-details/2026/Salesforce-Delivers-Record-Second-Quarter-Fiscal-2027-Results/default.aspx>\n- **More than $1.5 billion ARR** \u2014 Salesforce-reported Agentforce annual recurring revenue in Q2 FY27, up more than 240% year over year  \n  <https://investor.salesforce.com/news/news-details/2026/Salesforce-Delivers-Record-Second-Quarter-Fiscal-2027-Results/default.aspx>\n\n  - source: <https://investor.salesforce.com/news/news-details/2026/Salesforce-Delivers-Record-Second-Quarter-Fiscal-2027-Results/default.aspx>\n  - source: <https://about.gitlab.com/press/releases/2026-08-20-gitlab-scales-agentic-ai-across-trusted-software-delivery-workflows/>\n  - source: <https://aws.amazon.com/about-aws/whats-new/2026/08/aws-agent-registry-generally-available/>\n  - source: <https://openai.com/index/introducing-the-agents-api>\n\n## 3. Agents often fail because the system feeds them the wrong business reality.\n\nThe most credible failure pattern is context failure rather than a spectacular model hallucination. VentureBeat\u2019s July 2026 Pulse survey of 101 enterprises found that 68% had traced at least one confident but wrong agent answer to missing or inconsistent business context during the previous six months; 37% reported that this had happened more than once. The sample was self-selected and directional, but the operational lesson is important: stale data, inconsistent metric definitions, missing documents, and incomplete retrieval can create answers that look confident and plausible. Organizations with context-layer projects reported more recurring failures, which the study says is likely because they can detect and attribute them.\n\n- **101 enterprises** \u2014 Respondents in VentureBeat Pulse\u2019s July 2026 survey; organizations had more than 100 employees  \n  <https://venturebeat.com/resources/agent-context-layers-enterprises-governing-their-ai-data-are-catching-twice-as-many-bad-answers-as-the-ones-who-arent>\n- **68%** \u2014 Respondents reporting at least one context-traced confident-but-wrong answer in the prior six months  \n  <https://venturebeat.com/resources/agent-context-layers-enterprises-governing-their-ai-data-are-catching-twice-as-many-bad-answers-as-the-ones-who-arent>\n- **37%** \u2014 Respondents reporting recurring context failures  \n  <https://venturebeat.com/resources/agent-context-layers-enterprises-governing-their-ai-data-are-catching-twice-as-many-bad-answers-as-the-ones-who-arent>\n- **50% versus 21%** \u2014 Recurring-failure rate among respondents building or having built a semantic layer versus respondents without one; the source cautions this reflects detection and selection effects  \n  <https://venturebeat.com/resources/agent-context-layers-enterprises-governing-their-ai-data-are-catching-twice-as-many-bad-answers-as-the-ones-who-arent>\n\n  - source: <https://venturebeat.com/resources/agent-context-layers-enterprises-governing-their-ai-data-are-catching-twice-as-many-bad-answers-as-the-ones-who-arent>\n\n## 4. Benchmark pass rates are a poor proxy for production reliability when tasks require many dependent actions.\n\nLong-horizon workflows expose a reliability ceiling that short benchmark scores hide. A September 2, 2026 arXiv study tested nine models\u2014six open models ranging from 1.2 billion to 671 billion parameters and three deployed proprietary systems\u2014across 10,664 trajectories. On the agentic tool-use task, every tested model fell from near-perfect success to near zero within 16 steps. A separate arXiv paper introduced a deployment-qualification method that combines reliability, human-review burden, and cost; in a 16-system, 750-case clinical-audit study, systems with nearly identical autonomous accuracy required materially different amounts of human review to reach the same reliability target. These are new and directly relevant findings, but both are preprints rather than audited enterprise field studies.\n\n- **10,664 trajectories** \u2014 Trajectories analyzed in the long-horizon degradation study submitted August 31, 2026  \n  <https://arxiv.org/abs/2609.01660>\n- **9 models** \u2014 Models tested: six open models from 1.2B to 671B parameters and three deployed proprietary systems  \n  <https://arxiv.org/abs/2609.01660>\n- **16 steps** \u2014 Within this horizon, every model tested on the study\u2019s agentic task fell from near-perfect success to near zero  \n  <https://arxiv.org/abs/2609.01660>\n- **16 agent systems and 750 cases** \u2014 Clinical-audit case-study scope in the READY deployment-qualification preprint  \n  <https://arxiv.org/abs/2609.02095v1>\n- **72.8% versus 72.5%** \u2014 Autonomous accuracy for two systems that differed by only 0.3 percentage points  \n  <https://arxiv.org/abs/2609.02095v1>\n- **39.2% versus 29.6% human review** \u2014 Human-review rates required by those two systems to qualify at the same 76% reliability target under the evaluated policy  \n  <https://arxiv.org/abs/2609.02095v1>\n\n  - source: <https://arxiv.org/abs/2609.01660>\n  - source: <https://arxiv.org/abs/2609.02095v1>\n\n## 5. Productivity gains are outrunning measurable enterprise financial impact.\n\nThe economic payoff is real for some deployments but not yet broad or uniform. McKinsey found a large gap between individual productivity and organization-level financial impact: 80% of respondents said AI improved their own productivity, while only 37% attributed at least some positive EBIT impact to AI use; the latter was essentially unchanged from the previous survey. About one in five respondents said AI-related operating costs\u2014including token costs\u2014constrained use. This supports a more cautious thesis: the bottleneck is increasingly operating model, observability, data quality, and unit economics, not whether a demo can complete a task.\n\n- **80%** \u2014 Respondents reporting that AI improved their individual productivity  \n  <https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai?page=58&onlycontent=1>\n- **37%** \u2014 Respondents attributing at least some positive EBIT impact to AI use  \n  <https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai?page=58&onlycontent=1>\n- **About 20%** \u2014 Respondents saying AI-related operating costs constrained or limited AI use  \n  <https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai?page=58&onlycontent=1>\n- **14%** \u2014 Respondents at AI-using organizations saying AI contributed to an overall workforce decline in the prior year  \n  <https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai?page=58&onlycontent=1>\n\n  - source: <https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai?page=58&onlycontent=1>\n\n## 6. The recent shift is from agent demos to deployment control planes.\n\nWhat is genuinely new in the last few months is not the existence of agent pilots; it is the infrastructure around controlled deployment. In August and September 2026, AWS made an Agent Registry generally available for governed discovery of agents, tools, skills, MCP servers, and custom resources; GitLab announced agentic workloads inside its single-tenant Dedicated environment for regulated customers; and OpenAI introduced the Agents API in public beta on September 10. These releases show vendors productizing identity, tenancy, tool access, deployment, and orchestration. The recirculated story is that enterprise pilots are failing at a universal 86\u201389% or 88% rate; the sources located for this briefing do not substantiate that number.\n\n- **5 AWS Regions** \u2014 Initial regions listed by AWS for the generally available Agent Registry  \n  <https://aws.amazon.com/about-aws/whats-new/2026/08/aws-agent-registry-generally-available/>\n- **1 single-tenant environment and region** \u2014 GitLab Dedicated deployment model announced for GitLab Duo Agent Platform customers  \n  <https://about.gitlab.com/press/releases/2026-08-20-gitlab-scales-agentic-ai-across-trusted-software-delivery-workflows/>\n\n  - source: <https://aws.amazon.com/about-aws/whats-new/2026/08/aws-agent-registry-generally-available/>\n  - source: <https://about.gitlab.com/press/releases/2026-08-20-gitlab-scales-agentic-ai-across-trusted-software-delivery-workflows/>\n  - source: <https://openai.com/index/introducing-the-agents-api>\n\n## Where sources disagree\n\n- **How much enterprise agent deployment is genuinely at scale** \u2014 Deloitte\u2019s April\u2013June 2026 survey of 501 U.S. leaders found 42% had tested or deployed agents, but only 15% had scaled orchestrated, multi-agent adoption. McKinsey\u2019s May\u2013June 2026 global survey found 40% of respondents at organizations with more than $1 billion in revenue were scaling agents in at least one function, versus 22% at smaller organizations. These are not necessarily contradictory: McKinsey\u2019s measure includes scaling in one or more functions and does not require multi-agent orchestration, while Deloitte\u2019s 15% is a narrower scale definition.\n- **What counts as production evidence** \u2014 Salesforce reports 7.0 billion Agentic Work Units delivered to date and 3.2 billion in fiscal Q2 2027, defining an AWU as a discrete task executed by an AI agent in production. This is strong vendor telemetry for Salesforce\u2019s own platform, but it is not a market-wide deployment rate and does not establish that every task was fully autonomous or economically successful.\n- **Whether observed agent failures are mainly model failures or systems failures** \u2014 The strongest recent evidence points toward system-level failure: missing or inconsistent business context, long-horizon error accumulation, insufficient human oversight, and weak governance. However, the available studies use different populations and tasks, so they do not establish a single universal ranking of failure causes.\n\n## Widely repeated, apparently wrong\n\n- Believed: 88% of AI-agent pilots fail to reach production.  \n  Actually: The widely repeated claim that \u201c88% of AI-agent pilots never reach production\u201d is not supported here by an identifiable primary IDC, Forrester, or Anaconda publication. It appears to be recirculated by secondary blogs and should not be presented as an established industry-wide failure rate.\n- Believed: 40% of agentic-AI projects have already failed or will fail in production.  \n  Actually: Gartner\u2019s often-cited \u201cmore than 40%\u201d figure is a forecast for agentic-AI projects that will be canceled by the end of 2027, not an observed 40% production-failure or cancellation rate.\n- Believed: Organizations without a semantic layer have fewer agent failures.  \n  Actually: A semantic or context layer can increase the number of failures an organization detects. In VentureBeat\u2019s small, self-selected survey, organizations building such layers reported more recurring failures, but the article explicitly warns that this likely reflects better instrumentation and reverse causation\u2014not that semantic layers make agents less reliable.\n",
+  "findings": [
+    {
+      "detail": "The production story is a narrow funnel, not a wholesale shift to autonomous digital workers. Deloitte\u2019s current survey found 42% of participating organizations had tested or deployed AI agents, but only 15% had scaled orchestrated, multi-agent adoption; just 5% said their business processes were highly prepared for agents, and 70% said they did not feel able to trust and govern them. McKinsey\u2019s broader figures are more favorable but use a looser definition: 40% of respondents at organizations above $1 billion in revenue said they were scaling agents in at least one function, compared with 22% at smaller organizations. The writer should distinguish \u201chas an agent project,\u201d \u201chas deployed an agent,\u201d and \u201chas scaled a governed multi-agent workflow.\u201d",
+      "figures": [
+        {
+          "is_estimate": false,
+          "source_url": "https://www.deloitte.com/us/en/about/press-room/deloitte-survey-examines-ai-readiness-agentic-ai-success.html",
+          "value": "42%",
+          "what": "Organizations that had tested or deployed AI agents in Deloitte\u2019s April\u2013June 2026 survey of 501 U.S. senior-manager-to-C-suite respondents"
+        },
+        {
+          "is_estimate": false,
+          "source_url": "https://www.deloitte.com/us/en/about/press-room/deloitte-survey-examines-ai-readiness-agentic-ai-success.html",
+          "value": "15%",
+          "what": "Organizations reporting scaled, orchestrated, multi-agent adoption"
+        },
+        {
+          "is_estimate": false,
+          "source_url": "https://www.deloitte.com/us/en/about/press-room/deloitte-survey-examines-ai-readiness-agentic-ai-success.html",
+          "value": "5%",
+          "what": "Organizations saying their business processes were highly prepared for AI agents"
+        },
+        {
+          "is_estimate": false,
+          "source_url": "https://www.deloitte.com/us/en/about/press-room/deloitte-survey-examines-ai-readiness-agentic-ai-success.html",
+          "value": "70%",
+          "what": "Leaders saying they did not feel able to trust and govern agents"
+        },
+        {
+          "is_estimate": false,
+          "source_url": "https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai?page=58&onlycontent=1",
+          "value": "40%",
+          "what": "Respondents at organizations with more than $1 billion in annual revenue reporting that they were scaling AI agents in at least one business function"
+        },
+        {
+          "is_estimate": false,
+          "source_url": "https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai?page=58&onlycontent=1",
+          "value": "22%",
+          "what": "Respondents at smaller organizations reporting that they were scaling AI agents in at least one function"
+        },
+        {
+          "is_estimate": false,
+          "source_url": "https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai?page=58&onlycontent=1",
+          "value": "1,719 respondents in 97 countries",
+          "what": "McKinsey global survey sample and geographic coverage; fieldwork ran May 4\u2013June 8, 2026"
+        }
+      ],
+      "headline": "Most organizations are experimenting or deploying; relatively few have scaled autonomous workflows.",
+      "source_urls": [
+        "https://www.deloitte.com/us/en/about/press-room/deloitte-survey-examines-ai-readiness-agentic-ai-success.html",
+        "https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai?page=58&onlycontent=1"
+      ]
+    },
+    {
+      "detail": "There is concrete production shipping, but it is concentrated in bounded, auditable work\u2014customer-service actions, record updates, workflow triggers, coding, and DevOps\u2014rather than unrestricted autonomy. Salesforce\u2019s own fiscal results provide unusually direct production telemetry: the company says its agents executed billions of discrete tasks across Agentforce and Slack. Recent product releases also show the market moving from standalone chat interfaces toward agent registries, single-tenant deployment, tool permissions, and developer APIs\u2014the operational layer needed to put agents inside existing systems.",
+      "figures": [
+        {
+          "is_estimate": false,
+          "source_url": "https://investor.salesforce.com/news/news-details/2026/Salesforce-Delivers-Record-Second-Quarter-Fiscal-2027-Results/default.aspx",
+          "value": "7.0 billion AWUs",
+          "what": "Agentic Work Units delivered to date across Salesforce Agentforce and Slack, as reported August 26, 2026"
+        },
+        {
+          "is_estimate": false,
+          "source_url": "https://investor.salesforce.com/news/news-details/2026/Salesforce-Delivers-Record-Second-Quarter-Fiscal-2027-Results/default.aspx",
+          "value": "3.2 billion AWUs",
+          "what": "Agentic Work Units delivered in Salesforce fiscal Q2 2027"
+        },
+        {
+          "is_estimate": false,
+          "source_url": "https://investor.salesforce.com/news/news-details/2026/Salesforce-Delivers-Record-Second-Quarter-Fiscal-2027-Results/default.aspx",
+          "value": "97% quarter over quarter",
+          "what": "Growth in Salesforce\u2019s reported Q2 FY27 Agentic Work Units"
+        },
+        {
+          "is_estimate": false,
+          "source_url": "https://investor.salesforce.com/news/news-details/2026/Salesforce-Delivers-Record-Second-Quarter-Fiscal-2027-Results/default.aspx",
+          "value": "More than $1.5 billion ARR",
+          "what": "Salesforce-reported Agentforce annual recurring revenue in Q2 FY27, up more than 240% year over year"
+        }
+      ],
+      "headline": "What is actually shipping: agents embedded in business systems, especially service and software workflows.",
+      "source_urls": [
+        "https://investor.salesforce.com/news/news-details/2026/Salesforce-Delivers-Record-Second-Quarter-Fiscal-2027-Results/default.aspx",
+        "https://about.gitlab.com/press/releases/2026-08-20-gitlab-scales-agentic-ai-across-trusted-software-delivery-workflows/",
+        "https://aws.amazon.com/about-aws/whats-new/2026/08/aws-agent-registry-generally-available/",
+        "https://openai.com/index/introducing-the-agents-api"
+      ]
+    },
+    {
+      "detail": "The most credible failure pattern is context failure rather than a spectacular model hallucination. VentureBeat\u2019s July 2026 Pulse survey of 101 enterprises found that 68% had traced at least one confident but wrong agent answer to missing or inconsistent business context during the previous six months; 37% reported that this had happened more than once. The sample was self-selected and directional, but the operational lesson is important: stale data, inconsistent metric definitions, missing documents, and incomplete retrieval can create answers that look confident and plausible. Organizations with context-layer projects reported more recurring failures, which the study says is likely because they can detect and attribute them.",
+      "figures": [
+        {
+          "is_estimate": false,
+          "source_url": "https://venturebeat.com/resources/agent-context-layers-enterprises-governing-their-ai-data-are-catching-twice-as-many-bad-answers-as-the-ones-who-arent",
+          "value": "101 enterprises",
+          "what": "Respondents in VentureBeat Pulse\u2019s July 2026 survey; organizations had more than 100 employees"
+        },
+        {
+          "is_estimate": false,
+          "source_url": "https://venturebeat.com/resources/agent-context-layers-enterprises-governing-their-ai-data-are-catching-twice-as-many-bad-answers-as-the-ones-who-arent",
+          "value": "68%",
+          "what": "Respondents reporting at least one context-traced confident-but-wrong answer in the prior six months"
+        },
+        {
+          "is_estimate": false,
+          "source_url": "https://venturebeat.com/resources/agent-context-layers-enterprises-governing-their-ai-data-are-catching-twice-as-many-bad-answers-as-the-ones-who-arent",
+          "value": "37%",
+          "what": "Respondents reporting recurring context failures"
+        },
+        {
+          "is_estimate": false,
+          "source_url": "https://venturebeat.com/resources/agent-context-layers-enterprises-governing-their-ai-data-are-catching-twice-as-many-bad-answers-as-the-ones-who-arent",
+          "value": "50% versus 21%",
+          "what": "Recurring-failure rate among respondents building or having built a semantic layer versus respondents without one; the source cautions this reflects detection and selection effects"
+        }
+      ],
+      "headline": "Agents often fail because the system feeds them the wrong business reality.",
+      "source_urls": [
+        "https://venturebeat.com/resources/agent-context-layers-enterprises-governing-their-ai-data-are-catching-twice-as-many-bad-answers-as-the-ones-who-arent"
+      ]
+    },
+    {
+      "detail": "Long-horizon workflows expose a reliability ceiling that short benchmark scores hide. A September 2, 2026 arXiv study tested nine models\u2014six open models ranging from 1.2 billion to 671 billion parameters and three deployed proprietary systems\u2014across 10,664 trajectories. On the agentic tool-use task, every tested model fell from near-perfect success to near zero within 16 steps. A separate arXiv paper introduced a deployment-qualification method that combines reliability, human-review burden, and cost; in a 16-system, 750-case clinical-audit study, systems with nearly identical autonomous accuracy required materially different amounts of human review to reach the same reliability target. These are new and directly relevant findings, but both are preprints rather than audited enterprise field studies.",
+      "figures": [
+        {
+          "is_estimate": false,
+          "source_url": "https://arxiv.org/abs/2609.01660",
+          "value": "10,664 trajectories",
+          "what": "Trajectories analyzed in the long-horizon degradation study submitted August 31, 2026"
+        },
+        {
+          "is_estimate": false,
+          "source_url": "https://arxiv.org/abs/2609.01660",
+          "value": "9 models",
+          "what": "Models tested: six open models from 1.2B to 671B parameters and three deployed proprietary systems"
+        },
+        {
+          "is_estimate": false,
+          "source_url": "https://arxiv.org/abs/2609.01660",
+          "value": "16 steps",
+          "what": "Within this horizon, every model tested on the study\u2019s agentic task fell from near-perfect success to near zero"
+        },
+        {
+          "is_estimate": false,
+          "source_url": "https://arxiv.org/abs/2609.02095v1",
+          "value": "16 agent systems and 750 cases",
+          "what": "Clinical-audit case-study scope in the READY deployment-qualification preprint"
+        },
+        {
+          "is_estimate": false,
+          "source_url": "https://arxiv.org/abs/2609.02095v1",
+          "value": "72.8% versus 72.5%",
+          "what": "Autonomous accuracy for two systems that differed by only 0.3 percentage points"
+        },
+        {
+          "is_estimate": false,
+          "source_url": "https://arxiv.org/abs/2609.02095v1",
+          "value": "39.2% versus 29.6% human review",
+          "what": "Human-review rates required by those two systems to qualify at the same 76% reliability target under the evaluated policy"
+        }
+      ],
+      "headline": "Benchmark pass rates are a poor proxy for production reliability when tasks require many dependent actions.",
+      "source_urls": [
+        "https://arxiv.org/abs/2609.01660",
+        "https://arxiv.org/abs/2609.02095v1"
+      ]
+    },
+    {
+      "detail": "The economic payoff is real for some deployments but not yet broad or uniform. McKinsey found a large gap between individual productivity and organization-level financial impact: 80% of respondents said AI improved their own productivity, while only 37% attributed at least some positive EBIT impact to AI use; the latter was essentially unchanged from the previous survey. About one in five respondents said AI-related operating costs\u2014including token costs\u2014constrained use. This supports a more cautious thesis: the bottleneck is increasingly operating model, observability, data quality, and unit economics, not whether a demo can complete a task.",
+      "figures": [
+        {
+          "is_estimate": false,
+          "source_url": "https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai?page=58&onlycontent=1",
+          "value": "80%",
+          "what": "Respondents reporting that AI improved their individual productivity"
+        },
+        {
+          "is_estimate": false,
+          "source_url": "https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai?page=58&onlycontent=1",
+          "value": "37%",
+          "what": "Respondents attributing at least some positive EBIT impact to AI use"
+        },
+        {
+          "is_estimate": false,
+          "source_url": "https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai?page=58&onlycontent=1",
+          "value": "About 20%",
+          "what": "Respondents saying AI-related operating costs constrained or limited AI use"
+        },
+        {
+          "is_estimate": false,
+          "source_url": "https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai?page=58&onlycontent=1",
+          "value": "14%",
+          "what": "Respondents at AI-using organizations saying AI contributed to an overall workforce decline in the prior year"
+        }
+      ],
+      "headline": "Productivity gains are outrunning measurable enterprise financial impact.",
+      "source_urls": [
+        "https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai?page=58&onlycontent=1"
+      ]
+    },
+    {
+      "detail": "What is genuinely new in the last few months is not the existence of agent pilots; it is the infrastructure around controlled deployment. In August and September 2026, AWS made an Agent Registry generally available for governed discovery of agents, tools, skills, MCP servers, and custom resources; GitLab announced agentic workloads inside its single-tenant Dedicated environment for regulated customers; and OpenAI introduced the Agents API in public beta on September 10. These releases show vendors productizing identity, tenancy, tool access, deployment, and orchestration. The recirculated story is that enterprise pilots are failing at a universal 86\u201389% or 88% rate; the sources located for this briefing do not substantiate that number.",
+      "figures": [
+        {
+          "is_estimate": false,
+          "source_url": "https://aws.amazon.com/about-aws/whats-new/2026/08/aws-agent-registry-generally-available/",
+          "value": "5 AWS Regions",
+          "what": "Initial regions listed by AWS for the generally available Agent Registry"
+        },
+        {
+          "is_estimate": false,
+          "source_url": "https://about.gitlab.com/press/releases/2026-08-20-gitlab-scales-agentic-ai-across-trusted-software-delivery-workflows/",
+          "value": "1 single-tenant environment and region",
+          "what": "GitLab Dedicated deployment model announced for GitLab Duo Agent Platform customers"
+        }
+      ],
+      "headline": "The recent shift is from agent demos to deployment control planes.",
+      "source_urls": [
+        "https://aws.amazon.com/about-aws/whats-new/2026/08/aws-agent-registry-generally-available/",
+        "https://about.gitlab.com/press/releases/2026-08-20-gitlab-scales-agentic-ai-across-trusted-software-delivery-workflows/",
+        "https://openai.com/index/introducing-the-agents-api"
+      ]
+    }
+  ],
+  "summary": "Agentic AI is shipping in production, but mostly as bounded systems inside customer service, software development, and workflow automation\u2014not as unrestricted autonomous employees. The latest evidence shows a widening gap between experimentation and governed scale: context quality, long-horizon reliability, human oversight, and cost control are the main deployment constraints, while vendors are spending the past few months productizing registries, tenancy, tool permissions, and agent APIs.",
+  "disagreements": [
+    {
+      "about": "How much enterprise agent deployment is genuinely at scale",
+      "positions": "Deloitte\u2019s April\u2013June 2026 survey of 501 U.S. leaders found 42% had tested or deployed agents, but only 15% had scaled orchestrated, multi-agent adoption. McKinsey\u2019s May\u2013June 2026 global survey found 40% of respondents at organizations with more than $1 billion in revenue were scaling agents in at least one function, versus 22% at smaller organizations. These are not necessarily contradictory: McKinsey\u2019s measure includes scaling in one or more functions and does not require multi-agent orchestration, while Deloitte\u2019s 15% is a narrower scale definition."
+    },
+    {
+      "about": "What counts as production evidence",
+      "positions": "Salesforce reports 7.0 billion Agentic Work Units delivered to date and 3.2 billion in fiscal Q2 2027, defining an AWU as a discrete task executed by an AI agent in production. This is strong vendor telemetry for Salesforce\u2019s own platform, but it is not a market-wide deployment rate and does not establish that every task was fully autonomous or economically successful."
+    },
+    {
+      "about": "Whether observed agent failures are mainly model failures or systems failures",
+      "positions": "The strongest recent evidence points toward system-level failure: missing or inconsistent business context, long-horizon error accumulation, insufficient human oversight, and weak governance. However, the available studies use different populations and tasks, so they do not establish a single universal ranking of failure causes."
+    }
+  ],
+  "corrections": [
+    {
+      "actually": "The widely repeated claim that \u201c88% of AI-agent pilots never reach production\u201d is not supported here by an identifiable primary IDC, Forrester, or Anaconda publication. It appears to be recirculated by secondary blogs and should not be presented as an established industry-wide failure rate.",
+      "widely_believed": "88% of AI-agent pilots fail to reach production."
+    },
+    {
+      "actually": "Gartner\u2019s often-cited \u201cmore than 40%\u201d figure is a forecast for agentic-AI projects that will be canceled by the end of 2027, not an observed 40% production-failure or cancellation rate.",
+      "widely_believed": "40% of agentic-AI projects have already failed or will fail in production."
+    },
+    {
+      "actually": "A semantic or context layer can increase the number of failures an organization detects. In VentureBeat\u2019s small, self-selected survey, organizations building such layers reported more recurring failures, but the article explicitly warns that this likely reflects better instrumentation and reverse causation\u2014not that semantic layers make agents less reliable.",
+      "widely_believed": "Organizations without a semantic layer have fewer agent failures."
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://www.ai-crescent.com/research/state-of-agentic-ai-in-production-2026",
+      "title": "The State of Agentic AI in Production, 2026",
+      "snippet": "**The short version:** nearly two-thirds of enterprises have touched agentic AI in some form, but the share actually running it in production at meaningful scale is still in the low double digits, and the reasons are almost never about the model.\n...\nThe recurring production failure modes across reported incidents cluster into four categories:\n- **Tool-calling errors** \u2014 malformed calls, wrong tool selection, and silent partial failures that don't raise an exception\n- **Cost drift** \u2014 loops and retries that inflate spend without a corresponding quality gain\n- **Hallucination cascades** \u2014 an early incorrect step compounds through the rest of a multi-step trajectory\n- **Silent quality drift** \u2014 output quality degrades gradually enough that no single request looks wrong in isolation",
+      "date": "2026-08-22",
+      "last_updated": "2026-08-24"
+    },
+    {
+      "url": "https://thesaaslibrary.com/why-do-ai-agents-fail-second-attempt-buyers/",
+      "title": "Why Do AI Agents Fail? Second-Attempt Buyer Data",
+      "snippet": "In 2025, roughly 88% of AI proofs-of-concept did not reach production; newer IDC/Lenovo data puts the 2026 figure at 46% reaching production.\n...\nGartner, 2025\n...\n46% of AI proofs-of-concept reached production in IDC/Lenovo\u2019s 2026 CIO Playbook, up sharply from roughly 10% a year earlier.\n...\n**2026 (current):** IDC/Lenovo\u2019s newer CIO Playbook found 46% of AI proofs-of-concept had progressed into production \u2014 a major improvement in a single year.\n...\nRoughly 46% of AI proofs-of-concept now reach production, per IDC\u2019s newest 2026 research with Lenovo \u2014 a sharp improvement from the 88% failure rate reported in IDC\u2019s prior-year edition of the same survey.",
+      "date": "2026-08-18",
+      "last_updated": "2026-08-22"
+    },
+    {
+      "url": "https://medium.com/@aboutnayon/for-every-33-ai-agent-pilots-a-company-launches-4-go-live-the-11-that-survive-return-171-35ba3dc4222e",
+      "title": "For Every 33 AI Agent Pilots a Company Launches, 4 Go Live. The 11% That Survive Return 171%.",
+      "snippet": "IDC's research on enterprise agent deployment, conducted in partnership with Lenovo, produced the cleanest framing of the problem:88% of AI agent proofs-of-concept never reach broad production.Their ratio is the part that sticks \u2014 for every 33 pilots a company launches, roughly4enter live operation.\n...\nThat's not an outlier finding.\nMultiple independent 2026 studies put the enterprise agent pilot failure rate in the86\u201389%band.\nDifferent methodologies, same conclusion.",
+      "date": "2026-08-15",
+      "last_updated": "2026-08-15"
+    },
+    {
+      "url": "https://www.k-ai.ai/en/news/ai-agent-pilot-failure-document-reliability/",
+      "title": "88% of AI Agent Pilots Never Reach Production. No Official ...",
+      "snippet": "Forrester/Anaconda, June 2026: 88% of AI agent pilots fail.\n...\nAccording to *The State of Agentic AI in 2026*, published on June 9, 2026 by Forrester with Anaconda, three out of four enterprises now have an AI agent project underway \u2014 and 88% of those pilots never reach production.",
+      "date": "2026-08-14",
+      "last_updated": "2026-09-06"
+    },
+    {
+      "url": "https://finance.yahoo.com/technology/ai/articles/agent-production-gap-171-roi-123605791.html",
+      "title": "The Agent Production Gap: When 171% ROI Isn't Enough to Ship",
+      "snippet": "Data from Forrester and Anaconda paints an even starker picture: 86% to 88% of AI agent pilots never graduate to production.\n...\nForrester reports that 41% of deployments showing negative ROI after 12 months are hampered by a fundamental lack of clear success criteria.",
+      "date": "2026-09-06",
+      "last_updated": "2026-09-10"
+    },
+    {
+      "url": "https://venturebeat.com/orchestration/enterprises-winning-with-ai-agents-are-limiting-how-much-the-agents-can-do-alone",
+      "title": "Enterprises winning with AI agents are limiting how ... - VentureBeat",
+      "snippet": "By Gartner's own forecast, more than 40% of the agentic AI projects running today won't survive to see 2028.\nNot because the models fall short; because of escalating costs, unclear business value, and inadequate risk controls.",
+      "date": "2026-08-22",
+      "last_updated": "2026-08-24"
+    },
+    {
+      "url": "https://venturebeat.com/ai/enterprises-winning-with-ai-agents-are-limiting-how-much-the-agents-can-do-alone",
+      "title": "Enterprises winning with AI agents are limiting how much the agents can do alone",
+      "snippet": "By Gartner's own forecast, more than 40% of the agentic AI projects running today won't survive to see 2028.\nNot because the models fall short; because of escalating costs, unclear business value, and inadequate risk controls.",
+      "date": "2026-08-22",
+      "last_updated": "2026-08-24"
+    },
+    {
+      "url": "https://nhimg.org/articles/ai-agent-failure-rates-expose-the-governance-gap-in-production/",
+      "title": "AI agent failure rates expose the governance gap in ...",
+      "snippet": "> **TL;DR:** AI agents fail in production 70% to 95% of the time, with performance falling further in repeated runs and multi-agent chains, according to **Fiddler**'s analysis of benchmark and enterprise data.\n...\n**By the numbers:**\n- AI agents fail between 70% and 95% of the time in production environments, depending on task complexity and how success is measured.",
+      "date": "2026-08-19",
+      "last_updated": "2026-08-24"
+    },
+    {
+      "url": "https://scult.in/blog/enterprise-production-adoption-and-the-pilot-to-production-gap",
+      "title": "The AI Pilot-to-Production Gap: Why Most Enterprise Agent Projects ...",
+      "snippet": "**Direct answer:** AI agent adoption inside large enterprises has become nearly universal, but production deployment has not kept pace \u2014 most agent pilots are started, and most never ship: OutSystems' 2026 State of AI Development report found 96% of enterprises use AI agents in some form and 80% of applications embed one, yet only 31% actually run an agent in production, while Deloitte's 2026 Tech Trends work put the pilot-to-production failure rate at 89% and MIT found that 95% of enterprise generative AI pilots fail to deliver measurable ROI.\n...\nDeloitte's 2026 Tech Trends research quantifies the failure side of that gap directly: an 89% pilot-to-production failure rate for agentic AI specifically.\nPut differently, for every ten agent pilots an enterprise starts, roughly nine of them stall, get shelved, or quietly disappear before they ever touch a live system.\n...\nOutSystems' 2026 global research puts production usage at 31% of organizations, while DigitalApplied's regional breakdown finds North America at roughly 35%, the UK, Australia, and Germany all around 31-33%, Western Europe at 29%, and the Middle East & Africa region at just 16%.",
+      "date": "2026-08-25",
+      "last_updated": "2026-09-04"
+    },
+    {
+      "url": "https://kurums.com/agentic-ai-in-2026-why-most-enterprise-agents-still-fail-to-move-the-needle/",
+      "title": "Agentic AI in 2026: Why Most Enterprise Agents Still Fail to Move the Needle",
+      "snippet": "Separately, Gartner puts the failure rate of dedicated agentic AI initiatives at over 40% by 2027, citing unclear ROI, spiraling costs and immature risk controls as the leading causes for cancellation.",
+      "date": "2026-08-21",
+      "last_updated": "2026-09-03"
+    },
+    {
+      "url": "https://buttondown.com/TheAutonomousEdge/archive/field-guide-the-state-of-ai-agent-adoption-2026/",
+      "title": "Field Guide: The State of AI Agent Adoption (2026) - Buttondown",
+      "snippet": "- **86\u201388%** of agent pilots fail to graduate to production, per multiple 2026 industry analyses (Forrester/Anaconda and others converge on this range).",
+      "date": "2026-08-19",
+      "last_updated": "2026-08-28"
+    },
+    {
+      "url": "https://www.iiot-world.com/artificial-intelligence-ml/agentic-ai-manufacturing-2026/",
+      "title": "Agentic AI in Manufacturing: ROI vs. Reality",
+      "snippet": "At the same time, Gartner predicts that more than 40% of agentic AI projects will be canceled by the end of 2027, and 80% of AI projects across industries fail outright.\n...\n**The failure rate for AI projects in manufacturing sits at 76.4%, according to Folio3 AI, and 84% of those failures trace back to leadership decisions rather than technical limitations, according to Labor411.\n...\nManufacturing AI projects fail at a rate of 76.4%, with 84% of failures driven by leadership rather than technology.",
+      "date": "2026-08-21",
+      "last_updated": "2026-08-26"
+    },
+    {
+      "url": "https://www.nocode.tech/article/50-of-enterprises-shipped-an-ai-agent-that-passed-evals-then-watched-it-fail-a-customer",
+      "title": "50% of Enterprises Shipped an AI Agent That Passed Evals",
+      "snippet": "Here's something I can't stop thinking about: half of enterprises that deploy AI agents have shipped one that passed every internal evaluation and then failed, publicly, in front of a real customer.\n...\nThat number comes from VentureBeat's June 2026 Pulse survey of 157 enterprises with 100 or more employees.\n50% confirmed they'd deployed an agent or LLM feature that cleared their eval suite and then caused a customer-facing failure.\nA quarter said it happened more than once.",
+      "date": "2026-08-16",
+      "last_updated": "2026-08-28"
+    },
+    {
+      "url": "https://www.ai-crescent.com/blog/why-most-ai-agent-pilots-never-reach-production",
+      "title": "Why Most AI Agent Pilots Never Reach Production - Crescent AI",
+      "snippet": "Mayfield's 2026 CXO AI Survey found seventy-nine percent of enterprises claim they've adopted AI agents, but only 11 percent report running agents in live production systems handling real user requests with real consequences ^[1]^.\n...\n**Key Takeaways:**\n- Only about 11% of enterprise AI agents reach stable production, despite 79% claiming adoption ^[1]^\n...\n- 88% of AI agent pilots never reach production at all ^[2]^, and IDC's research attributes most of that gap to infrastructure and organizational readiness, not model quality ^[3]^\n...\nOnly 11-17% of enterprise AI agents deployed in pilot reach stable production operation, according to 2026 deployment data.",
+      "date": "2026-08-22",
+      "last_updated": "2026-09-05"
+    },
+    {
+      "url": "https://www.linkedin.com/pulse/chaos-predictions-40-agentic-ai-projects-scrapped-enterprises-mpwbc",
+      "title": "40% of Agentic AI Projects Will Be Scrapped. Enterprises ...",
+      "snippet": "Chaos Predictions - 40% of Agentic AI Projects Will Be Scrapped.\n...\nA leading market analyst firm projects that more than 40% of agentic AI projects will be scrapped by the end of 2027.\n...\nOf the deployments that do reach production, MIT Sloan's 2026 longitudinal study found that 47% of stalled programs had no automated evaluation running at month 12.",
+      "date": "2026-08-18",
+      "last_updated": "2026-09-06"
+    },
+    {
+      "url": "https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai?page=58&onlycontent=1",
+      "title": "The State of AI: Global Survey 2025 | McKinsey",
+      "snippet": "## Key takeaways\n- *Use of agentic AI is increasing, mostly accounted for by large enterprises.* Forty percent of respondents from large organizations (those with annual revenues of more than $1 billion) report scaling AI agents, up from 27 percent last year.\nThe share of respondents from smaller organizations reporting scaling remained flat at 22 percent.\n- *Many organizations are already scaling software coding agents.* About two in ten are scaling them (31 percent at larger enterprises).\n- *Organizations are using agentic coding tools to build software in-house in lieu of purchasing it.* Nearly a third of respondents (32 percent) report that their organizations have decided against buying one or more software products or features because they could be built internally with agentic coding tools.\n- *The cost of AI is constraining usage in some organizations.* About 20 percent of respondents report that AI-related operating costs (including token costs) constrained their AI use.\nBut the majority plan to increase their AI investments.\n- *The share of respondents reporting enterprise-level financial impact from AI use has not changed since last year.* Thirty-seven percent of respondents attribute at least some EBIT impact to AI use (about the same share as last year).\n...\nThe latest McKinsey Global Survey on the state of AI finds that organizations are scaling AI across the enterprise, deploying it in more business functions, and using a range of tools\u2014from chatbots and software coding agents to agentic systems capable of acting autonomously across workflows.\nAnd individual employees are reporting real impact: Eight in ten respondents say AI has improved their own productivity.",
+      "date": "2026-08-25",
+      "last_updated": "2026-09-03"
+    },
+    {
+      "url": "https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai?page=31?page=31?page=31?page=31?page=31?page=31?page=31?page=31?page=31?page=31?page=31?page=31?page=31?page=31?page=31?page=31",
+      "title": "The state of AI in 2025: Agents, innovation, and transformation",
+      "snippet": "## Key takeaways\n- *Use of agentic AI is increasing, mostly accounted for by large enterprises.* Forty percent of respondents from large organizations (those with annual revenues of more than $1 billion) report scaling AI agents, up from 27 percent last year.\nThe share of respondents from smaller organizations reporting scaling remained flat at 22 percent.\n- *Many organizations are already scaling software coding agents.* About two in ten are scaling them (31 percent at larger enterprises).\n- *Organizations are using agentic coding tools to build software in-house in lieu of purchasing it.* Nearly a third of respondents (32 percent) report that their organizations have decided against buying one or more software products or features because they could be built internally with agentic coding tools.\n- *The cost of AI is constraining usage in some organizations.* About 20 percent of respondents report that AI-related operating costs (including token costs) constrained their AI use.\nBut the majority plan to increase their AI investments.\n...\nThe latest McKinsey Global Survey on the state of AI finds that organizations are scaling AI across the enterprise, deploying it in more business functions, and using a range of tools\u2014from chatbots and software coding agents to agentic systems capable of acting autonomously across workflows.\n...\n##### The state of AI in 2025: Agents, innovation, and transformation\nSurvey",
+      "date": "2026-08-25",
+      "last_updated": "2026-09-03"
+    },
+    {
+      "url": "https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai?page=57&onlycontent=1",
+      "title": "Ai As A Catalyst For...",
+      "snippet": "## Key takeaways\n- *Use of agentic AI is increasing, mostly accounted for by large enterprises.* Forty percent of respondents from large organizations (those with annual revenues of more than $1 billion) report scaling AI agents, up from 27 percent last year.\nThe share of respondents from smaller organizations reporting scaling remained flat at 22 percent.\n- *Many organizations are already scaling software coding agents.* About two in ten are scaling them (31 percent at larger enterprises).\n- *Organizations are using agentic coding tools to build software in-house in lieu of purchasing it.* Nearly a third of respondents (32 percent) report that their organizations have decided against buying one or more software products or features because they could be built internally with agentic coding tools.\n- *The cost of AI is constraining usage in some organizations.* About 20 percent of respondents report that AI-related operating costs (including token costs) constrained their AI use.\nBut the majority plan to increase their AI investments.\n- *The share of respondents reporting enterprise-level financial impact from AI use has not changed since last year.* Thirty-seven percent of respondents attribute at least some EBIT impact to AI use (about the same share as last year).\n...\nThe latest McKinsey Global Survey on the state of AI finds that organizations are scaling AI across the enterprise, deploying it in more business functions, and using a range of tools\u2014from chatbots and software coding agents to agentic systems capable of acting autonomously across workflows.\nAnd individual employees are reporting real impact: Eight in ten respondents say AI has improved their own productivity.\n...\nThe share scaling agents in one or more functions increased from 27 percent to 40 percent, while adoption among smaller organizations remained essentially flat, at 22 percent (Exhibit 2).\n...\nSurvey",
+      "date": "2026-08-25",
+      "last_updated": "2026-09-10"
+    },
+    {
+      "url": "https://www.deloitte.com/us/en/about/press-room/deloitte-survey-examines-ai-readiness-agentic-ai-success.html",
+      "title": "AI Agents are Only the Beginning: Deloitte Survey ...",
+      "snippet": "- **A high ceiling for expectations:** Within four years, 74% of leaders surveyed expect nearly half of their business processes will be redesigned or rebuilt around AI agents, and 61% expect most AI agents used will be generally autonomous (with humans acting as oversight).\n...\n- **Challenges to scale:** Only 5% of organizations say their business processes are highly prepared for AI agents, and just 15% have scaled orchestrated, cross-functional multi-agent adoption.\n...\nazink@deloitte.com",
+      "date": "2026-08-12",
+      "last_updated": "2026-08-26"
+    },
+    {
+      "url": "https://www.deloitte.com/us/en/about/press-room/deloitte-open-model-engineering-practice.html",
+      "title": "Deloitte launches Open Model Engineering practice",
+      "snippet": "+1 408 704 2704\nmeneumann@deloitte.com",
+      "date": "2026-09-02",
+      "last_updated": "2026-09-03"
+    },
+    {
+      "url": "https://www.mckinsey.com/industries/technology-media-and-telecommunications/our-insights/beyond-the-copilot-scaling-the-agentic-product-development-life-cycle",
+      "title": "Beyond the copilot: Scaling the agentic product development life cycle",
+      "snippet": "- AI and agents are accelerating product and software development, but outcomes remain uneven enterprise-wide.\n- Some organizations are pulling ahead, realizing twofold productivity gains across meaningful portions of their teams, while others are seeing little impact or even negative returns.\n...\nIn our recent survey of 334 product and engineering leaders, only 25 percent of the respondents in director-and-above positions report meaningful (or top) AI acceleration, which we define as more than a quarter of their teams achieving twofold or greater productivity gains.\n...\nIt also builds on McKinsey\u2019s November 2025 baseline research on AI in software development.",
+      "date": "2026-08-21",
+      "last_updated": "2026-08-26"
+    },
+    {
+      "url": "https://www.deloitte.com/us/en/about/press-room/deloitte-expands-end-to-end-ai-controls-and-assurance-capabilities.html",
+      "title": "Deloitte Expands End-to-End AI Controls and Assurance ...",
+      "snippet": "While 74% of companies plan to deploy agentic AI within two years, only 21% report having a mature governance model for autonomous agents \u2014 highlighting a growing gap that puts organizations at significant risk as they scale AI systems, according to Deloitte\u2019s \u201cState of AI in the Enterprise\u201d report.\n...\n+1 571 766 7109\nkafhosh@deloitte.com",
+      "date": "2026-08-12",
+      "last_updated": "2026-08-26"
+    },
+    {
+      "url": "https://www.deloitte.com/mt/en/issues/ai.html?icid=top_ai",
+      "title": "Generative AI | Deloitte Malta",
+      "snippet": "Deloitte 2025 survey of 1,854 execs finds rising AI spend but elusive ROI; leaders make AI strategic, using generative for quick wins and agentic for change.",
+      "date": "2026-08-31",
+      "last_updated": "2026-09-10"
+    },
+    {
+      "url": "https://www.mckinsey.com/capabilities/tech-and-ai/our-insights/beyond-the-copilot-scaling-the-agentic-product-development-life-cycle",
+      "title": "Beyond the copilot: Scaling the agentic product development life cycle",
+      "snippet": "- AI and agents are accelerating product and software development, but outcomes remain uneven enterprise-wide.\n- Some organizations are pulling ahead, realizing twofold productivity gains across meaningful portions of their teams, while others are seeing little impact or even negative returns.\n...\nIn our recent survey of 334 product and engineering leaders, only 25 percent of the respondents in director-and-above positions report meaningful (or top) AI acceleration, which we define as more than a quarter of their teams achieving twofold or greater productivity gains.\n...\nIt also builds on McKinsey\u2019s November 2025 baseline research on AI in software development.",
+      "date": "2026-08-21",
+      "last_updated": "2026-08-31"
+    },
+    {
+      "url": "https://action.deloitte.com/insight/5122/stop-managing-ai-start-leading-it",
+      "title": "Stop managing AI. Start leading it. - Insights2Action - Deloitte",
+      "snippet": "Deloitte\u2019s 2026 State of AI in the Enterprise report found that only 21 percent of organizations have a mature governance model for agentic AI.^9^ That means roughly 80 percent of enterprises currently deploying AI agents lack the decision-boundaries, real-time monitoring, or audit trails to know with confidence what their AI is doing and who is responsible when it goes wrong.",
+      "date": "2026-09-01",
+      "last_updated": "2026-09-01"
+    },
+    {
+      "url": "https://www.deloitte.com/us/en/insights/topics/technology-management/ai-agents-human-workplace.html",
+      "title": "AI agents in the human workplace | Deloitte Insights",
+      "snippet": "Deloitte\u2019s 2026 State of AI in the Enterprise Survey suggests that agentic AI will become ubiquitous, with nearly three-quarters of surveyed organizations across industries and global regions planning to utilize agentic AI at least moderately in their operations in the next two years.^5^ Across the scenarios outlined in our research, four themes emerge as no-regret priorities: governance, strategy, workforce planning, and trust.",
+      "date": "2026-09-09",
+      "last_updated": "2026-09-10"
+    },
+    {
+      "url": "https://www.deloitte.com/us/en/services/consulting/articles/quality-engineering-for-scalable-agentic-ai.html",
+      "title": "Quality engineering for scalable agentic AI | Deloitte US",
+      "snippet": "+1 717 695 5420\n...\n+1 312 486 2034",
+      "date": "2026-09-04",
+      "last_updated": "2026-09-10"
+    },
+    {
+      "url": "https://www.deloitte.com/us/en/about/press-room/deloitte-becomes-first-gsi-to-deliver-salesforce-fde-engagement.html",
+      "title": "Deloitte Becomes First Global System Integrator to Deliver a ...",
+      "snippet": "+1 872 372 9484\nwchukerman@deloitte.com",
+      "date": "2026-08-12",
+      "last_updated": "2026-08-26"
+    },
+    {
+      "url": "https://www.deloitte.com/us/en/insights/topics/emerging-technologies/environmentally-responsible-ai.html",
+      "title": "Environmental stewardship for leaner AI agent systems - Deloitte",
+      "snippet": "Only 21% of enterprises responding to a recent multicountry Deloitte survey report having mature governance in place to manage the risks of agentic AI\nArticle",
+      "date": "2026-08-28",
+      "last_updated": "2026-09-08"
+    },
+    {
+      "url": "https://www.mckinsey.com/capabilities/tech-and-ai/our-insights/the-new-management-playbook-for-ai-how-to-move-faster-and-create-more-value",
+      "title": "The new management playbook for AI: How to move faster and create more value",
+      "snippet": "Our most recent State of AI report reveals that 94 percent of businesses have yet to create meaningful value.^1^ The math is unforgiving, and it underscores the skepticism that many boards and top teams have in making the level of investment necessary for successful business transformation with AI.",
+      "date": "2026-08-28",
+      "last_updated": "2026-09-09"
+    },
+    {
+      "url": "https://www.reuters.com/business/google-unveils-gemini-37-flash-ai-model-coding-agent-workflows-2026-08-13/",
+      "title": "Google unveils Gemini 3.7 Flash AI model for coding ...",
+      "snippet": "Aug 13 (Reuters) - Alphabet's (GOOGL.O), opens new tab Google launched Gemini 3.7 Flash on Thursday, its latest AI model designed for software coding and automated business tasks, but offered no details on when \u200bits flagship Pro model will be released.\n...\n- Gemini 3.7 Flash is released three weeks \u200bafter Gemini 3.6 Flash.\nIt has shown improved performance on coding tasks, including debugging, issue resolution and production-ready code generation, according to a Google blog post.\n...\n- The \u2060model is also being rolled out immediately to Gemini Spark, Google's subscription-based AI agent service available to Google AI Pro and Ultra customers in more than 160 countries.",
+      "date": "2026-08-13",
+      "last_updated": "2026-09-10"
+    },
+    {
+      "url": "https://www.morningstar.com/news/business-wire/20260820568323/anything-launches-skydive-a-platform-for-building-ai-coworkers",
+      "title": "Anything Launches Skydive, a Platform for Building AI ...",
+      "snippet": "Today, the system behind those agents is available to every company to build its own AI workforce.**\nAnything, the AI app builder used by over 1 million people, launched Skydive, a new platform that lets anyone at a company create and deploy AI agents for specific jobs.\n...\nSkydive has been running in closed beta with 20+ companies.\n...\nSkydive is available to the public today.",
+      "date": "2026-08-20",
+      "last_updated": "2026-09-10"
+    },
+    {
+      "url": "https://www.forbes.com/sites/timkeary/2026/08/20/slack-brings-ai-agents-to-workspaces-but-can-it-take-on-teams/",
+      "title": "Slack Brings AI Agents To Workspaces. But Can It Take On Teams?",
+      "snippet": "Slack launched Slack Code on August 20, an AI coding feature enabling teams to integrate agents like Claude Code and GitHub Copilot directly into their work channels.\n...\nOn August 20, the company launched Slack Code, an AI coding environment that will enable teams to use coding agents like Claude Code and GitHub Copilot directly in Slack.\nAccording to its announcement blog post, Slack Code will launch with dedicated, project-based code channels where teams can manage AI agents and share context in real time.\nUsers can also tag coding agents to spin up code channels from any conversation.",
+      "date": "2026-08-20",
+      "last_updated": "2026-09-10"
+    },
+    {
+      "url": "https://itbrief.asia/story/huawei-cloud-launches-codearts-agent-across-singapore-market",
+      "title": "Huawei Cloud launches CodeArts Agent across Singapore market",
+      "snippet": "Huawei Cloud has launched CodeArts Agent in Singapore, an artificial intelligence coding tool for software development.\n...\nCodeArts Agent includes 16 specialised agents designed to support different stages of software development, including requirements analysis, architecture design, coding, testing, issue resolution and code review.",
+      "date": "2026-08-31",
+      "last_updated": "2026-09-10"
+    },
+    {
+      "url": "https://www.techtimes.com/articles/324366/20260813/google-launches-gemini-37-flash-coding-gains-half-price-through-year-end.htm",
+      "title": "Google Launches Gemini 3.7 Flash: Coding Gains at Half-Price Through Year-End",
+      "snippet": "Google released Gemini 3.7 Flash on Thursday, a coding- and agent-focused AI model that arrived three weeks after its predecessor with notable gains on several key evaluations \u2014 and an introductory price of $0.75 per million input tokens and $3.75 per million output tokens that is half what Gemini 3.6 Flash cost at launch.\nThat price is locked in only through December 31, 2026, after which it doubles to $1.50 per million input tokens and $7.50 per million output tokens \u2014 meaning developers have roughly four months to evaluate whether the capability gains justify building production agents on this model before the economics change.\n...\nThe introductory rate of $0.75 per million input tokens and $3.75 per million output tokens expires on December 31, 2026.",
+      "date": "2026-08-13",
+      "last_updated": "2026-08-29"
+    },
+    {
+      "url": "https://finance.yahoo.com/technology/ai/articles/coder-spacexai-collaborate-bring-agentic-163000731.html",
+      "title": "Coder and SpaceXAI Collaborate to Bring Agentic Coding ...",
+      "snippet": "AUSTIN, Texas, Sept. 02, 2026 (GLOBE NEWSWIRE) -- Coder today announced Coder Agent Relay, a self-hosted execution environment for cloud coding agents, with SpaceXAI as its launch partner.",
+      "date": "2026-09-02",
+      "last_updated": "2026-09-09"
+    },
+    {
+      "url": "https://aiagentstore.ai/ai-agent-news/daily/2026-08-14",
+      "title": "Daily AI Agent News - August 13, 2026",
+      "snippet": "**What changed:** Reporting from Korea indicates manufacturers are moving away from internally built chatbots and toward top-tier general-purpose AI agents that can handle coding, verification, and program execution, as performance gaps have become too large to ignore.",
+      "date": "2026-08-14",
+      "last_updated": "2026-08-14"
+    },
+    {
+      "url": "https://aiweekly.co/ai-use-cases/industry/software-tech",
+      "title": "AI in Software & Tech: 83 real deployments",
+      "snippet": "Graduated Muse Code terminal AI coding agent from beta to production, adding inter-session messaging over Unix sockets, multi-subagent workflow orchestration, and a TypeScript SDK\nIn production Aug 31, 2026 Muse Code Source: developer.meta.com",
+      "date": "2026-09-04",
+      "last_updated": "2026-09-07"
+    },
+    {
+      "url": "https://www.stocktitan.net/news/EGHT/8x8-ai-studio-customer-interactions-grow-nearly-9x-since-launch-4zbaf6d6rkv4.html",
+      "title": "Businesses are putting 8x8 AI agents to work in days\u2014without an IT project",
+      "snippet": "CAMPBELL, Calif.--(BUSINESS WIRE)-- 8x8, Inc.\n(NASDAQ: EGHT), a leading global business communications platform provider, reported that the customer interactions powered by 8x8 AI Studio have grown nearly 9x since its early availability launch in April 2026.\nOrganizations across more than a dozen industries are already building and deploying AI agents in production on the 8x8 Platform for CX.\n...\n8x8 AI Studio remains available in early access for 8x8 customers, with no additional licensing required to access and a free tier for building and testing agents.",
+      "date": "2026-08-27",
+      "last_updated": "2026-09-02"
+    },
+    {
+      "url": "https://www.thecodew.com/2026/08/devops-watch-ai-agents-rewriting-software-delivery-pipeline.html",
+      "title": "DevOps Watch: AI Agents Are Rewriting DevOps: From Copilot to Autonomous Delivery",
+      "snippet": "This week's general availability milestones \u2014 **GitHub Copilot coding agent** (GA Sept 25, 2025), **GitLab Duo Agent Platform** (GA Jan 15, 2026), and **AWS DevOps Agent** (GA March 31, 2026) \u2014 plus Harness extending CI/CD to AI agents as a new artifact type, point to a single conclusion: DevOps is evolving from a collection of tools operated by engineering teams into an increasingly **automated, agent-driven software delivery system**.\n...\nGitHub announced that **Copilot coding agent**, its asynchronous, autonomous developer agent that works in the background via GitHub Actions, is now generally available for all paid Copilot subscribers.\n...\nGitLab followed on January 15, 2026, with **Duo Agent Platform GA**, moving from a single assistant to a multi-agent SDLC.\n...\nAWS closed the loop on March 31, 2026, with **DevOps Agent GA** \u2014 a frontier agent described as an always-on autonomous on-call engineer.",
+      "date": "2026-08-31",
+      "last_updated": "2026-08-31"
+    },
+    {
+      "url": "https://www.zdnet.com/article/ai-agent-adoption-tripled-measurable-roi/",
+      "title": "Business adoption of AI agents tripled this year - as measurable ROI emerges",
+      "snippet": "Enterprise AI agents have moved from experimental tests to rapid, production-scale deployment.\nThe average number of AI agents in production grew from five in February 2025 to 13 agents in April 2026.",
+      "date": "2026-08-17",
+      "last_updated": "2026-08-17"
+    },
+    {
+      "url": "https://aimmediahouse.com/ai-manufacturing/sauder-woodworking-deploys-agentic-ai-to-improve-manufacturing-operations",
+      "title": "Sauder Woodworking Deploys Agentic AI To Improve ...",
+      "snippet": "Sauder Woodworking has cut its average production changeover time by 93% after deploying Redzone\u2019s ChampionAI alongside its connected workforce platform, according to Redzone.\nThe manufacturer also reported a 40% productivity increase during its first year using the platform.\nThe Ohio-based company, North America\u2019s leading producer of ready-to-assemble furniture, began deploying Redzone in May 2025 at a production area focused on its IKEA business.\n...\nRedzone\u2019s case study says Sauder initially used its Productivity, Compliance, Reliability and Learning modules across three manufacturing sites in an approximately 18-month rollout.",
+      "date": "2026-08-19",
+      "last_updated": "2026-09-07"
+    },
+    {
+      "url": "https://openai.com/es-419/index/parloa/",
+      "title": "Parloa crea agentes con los que los clientes quieren hablar",
+      "snippet": "Parloa usa modelos de OpenAI para simular, evaluar y operar sistemas empresariales de atenci\u00f3n al cliente por voz.",
+      "date": "2026-08-19",
+      "last_updated": "2026-08-11"
+    },
+    {
+      "url": "https://www.okoone.com/spark/technology-innovation/salesforce-says-agentic-ai-workforces-are-more-than-doubling-each-year/",
+      "title": "Salesforce says agentic AI workforces are more than ...",
+      "snippet": "Salesforce customers increased their average number of production AI agents from five in February 2025 to 13 in April 2026.\n...\nOver the same period, the average time required to deploy an agent into production fell 53% to 1.9 days.",
+      "date": "2026-08-14",
+      "last_updated": "2026-09-09"
+    },
+    {
+      "url": "https://cryptobriefing.com/ai-agent-failures-rise-context-layers-survey/",
+      "title": "VentureBeat survey reveals AI agent failures rise despite ...",
+      "snippet": "A VB Pulse survey published in July 2026 found that 68% of enterprises traced at least one confident-but-wrong AI agent answer to missing or inconsistent business context over the prior six months.\nThat figure was 57% in VentureBeat\u2019s June 2026 survey.\nRecurring failures, meaning the same type of context breakdown happening more than once, climbed from 31% to 37% in the same window.\n...\nEnterprises that have built, or are actively building, a governed context layer reported recurring failures at a 50% rate.",
+      "date": "2026-08-17",
+      "last_updated": "2026-08-26"
+    },
+    {
+      "url": "https://labs.cloudsecurityalliance.org/research/csa-whitepaper-agentic-ai-loss-of-control-20260908-csa-style/",
+      "title": "Autonomous by Design, Uncontrolled in Practice \u2013 Lab Space",
+      "snippet": "Agentic AI systems \u2014 models that plan, use tools, and take multi-step actions toward a goal with limited human supervision \u2014 moved from pilot projects to production deployments across much of the enterprise software landscape during 2025 and 2026.",
+      "date": "2026-09-08",
+      "last_updated": "2026-09-10"
+    },
+    {
+      "url": "https://agentry.news/research/3607-ai-agent-incidents-show-misalignment-crisis",
+      "title": "AI Agent Incidents: 3,607 Cases Analyzed",
+      "snippet": "A July 2026 report analyzing 3,607 user-reported AI-agent incidents has documented the scale and character of agent misbehavior in production environments Pebblous.\nThe study, which collected reports from January 2025 through June 2026, found that **overeagerness occurred in 43.4% of incidents** and **general misalignment in 43.1%**, indicating that most failures stem from agents pursuing goals without adequate constraint or context-awareness rather than from outright malicious design Pebblous.\n...\nWhile the majority of incidents reflected recoverable errors, a material share caused lasting damage: **17.1% of incidents involved significant recovery costs**, and **3.4% caused severe, irreversible harm** Pebblous.",
+      "date": "2026-08-22",
+      "last_updated": "2026-08-22"
+    },
+    {
+      "url": "https://agentry.news/research/deloitte-42-of-enterprises-test-ai-agents-but-scaling-lags",
+      "title": "AI agent adoption: 42% testing, 15% scaling | Deloitte",
+      "snippet": "More than 4 in 10 leaders surveyed\u201442%\u2014report their organizations have tested or deployed AI agents, yet only 15% say they have scaled, orchestrated, multi-agent adoption in place Deloitte.",
+      "date": "2026-08-15",
+      "last_updated": "2026-08-16"
+    },
+    {
+      "url": "https://venturebeat.com/resources/agent-context-layers-enterprises-governing-their-ai-data-are-catching-twice-as-many-bad-answers-as-the-ones-who-arent",
+      "title": "Agent context layers: Enterprises governing their AI data ...",
+      "snippet": "ResearchVB Staff 12:30 am, PT, August 12, 2026 Credit: VentureBeatAcross 101 enterprises, the context feeding AI agents is failing often and repeatedly.",
+      "date": "2026-08-12",
+      "last_updated": "2026-08-25"
+    },
+    {
+      "url": "https://agentry.news/agent/3607-ai-agent-incidents-show-misalignment-crisis",
+      "title": "3,607 AI Agent Incidents Show Misalignment Crisis",
+      "snippet": "> A July 2026 analysis of 3,607 user-reported AI-agent misbehavior incidents revealed that overeagerness and general misalignment drove the majority of failures, with 3.4% causing severe irreversible ha\n...\nA July 2026 report analyzing 3,607 user-reported AI-agent incidents has documented the scale and character of agent misbehavior in production environments Pebblous.\nThe study, which collected reports from January 2025 through June 2026, found that **overeagerness occurred in 43.4% of incidents** and **general misalignment in 43.1%**, indicating that most failures stem from agents pursuing goals without adequate constraint or context-awareness rather than from outright malicious design Pebblous.\n...\nWhile the majority of incidents reflected recoverable errors, a material share caused lasting damage: **17.1% of incidents involved significant recovery costs**, and **3.4% caused severe, irreversible harm** Pebblous.",
+      "date": "2026-08-22",
+      "last_updated": "2026-08-22"
+    },
+    {
+      "url": "https://www.decus.co/insights/agent-pilot-production-gap-2026",
+      "title": "Why do 88% of AI agent pilots never reach production?",
+      "snippet": "It is 88% \u2014 the share of AI agent pilots that never reach production, according to industry surveys compiled from Gartner, McKinsey, IDC, Forrester and BCG data.\n...\nThe reasons pilots die have been stable across every survey that asks.\nIn order of frequency:\n1. **Evaluation gaps** (64%) \u2014 no way to measure whether the agent actually works before it touches real work\n2. **Governance friction** (57%) \u2014 unclear who owns the agent, what it may touch, and who answers for its mistakes\n3. **Model reliability concerns** (51%) \u2014 output quality at volume, not at demo scale",
+      "date": "2026-08-14",
+      "last_updated": "2026-09-07"
+    },
+    {
+      "url": "https://praesidia.ai/blog/why-agentic-ai-projects-get-canceled-2026",
+      "title": "Gartner Predicts 40% of Agentic AI Projects Get Canceled",
+      "snippet": "Only 17% of organizations had actually deployed AI agents at the time of the April 2026 Hype Cycle, against more than 60% expecting to deploy within two years.",
+      "date": "2026-08-14",
+      "last_updated": "2026-08-28"
+    },
+    {
+      "url": "https://www.linkedin.com/posts/ryanvanshur_gartner-published-two-numbers-about-ai-agents-activity-7493690361689554944-CLdE",
+      "title": "40% of AI Agents Will Fail Due to Poor Project Management",
+      "snippet": "Number two: over 40 percent of agentic AI projects will be canceled by the end of 2027.\nThe stated causes are escalating costs, unclear business value, and inadequate risk controls.\n...\nGartner expects more than 40% of agentic AI projects to be cancelled by the end of 2027, usually for the same three reasons: unclear business value, rising costs, and weak risk controls.",
+      "date": "2026-08-13",
+      "last_updated": "2026-09-08"
+    },
+    {
+      "url": "https://wirehubnews.com/ai-agent-projects-canceled-gartner-2028/",
+      "title": "More Than 40% Of AI Agent Projects Could Be Canceled Before 2028, According To Gartner",
+      "snippet": "But **Gartner** is warning that **more than 40% of agentic AI projects could be canceled by the end of 2027**.\n...\nGartner points to **rising costs, unclear business value and inadequate risk controls** as major reasons projects fail to move beyond experimentation and into production.",
+      "date": "2026-08-26",
+      "last_updated": "2026-08-26"
+    },
+    {
+      "url": "https://www.coradvancesolutions.com/industry-updates/agentic-ai-adoption-governance-gap-2026",
+      "title": "72% of enterprises now run agentic AI in production \u2014 but 60% still ...",
+      "snippet": "Agentic AI adoption has jumped from experimentation to production faster than oversight has kept pace, and Gartner expects over 40% of agentic AI projects to be cancelled by 2027 over unclear ROI and weak risk controls.\n...\nDespite the production numbers, most agentic AI projects don't make it that far: 88% of agent pilots never reach production at all.\nOf the ones that do, Gartner forecasts more than 40% will be cancelled by 2027, driven by unclear ROI and weak risk controls rather than the underlying technology failing to work.",
+      "date": "2026-08-12",
+      "last_updated": "2026-08-18"
+    },
+    {
+      "url": "https://replyant.com/blog/gartner-40-percent-cancellation-cliff/",
+      "title": "The 40% Cliff: Why 40% of Agentic AI Projects Get Cancelled by 2027",
+      "snippet": "**More than 40% of agentic AI projects will be cancelled by the end of 2027 \u2014 not because the models are weak, but because data, governance, and unit economics were never built to carry them.** Gartner\u2019s cancellation warning converges with Forrester\u2019s June 2026 finding that three-quarters of enterprise leaders say they are adopting agentic AI while only about 31% have an agent in meaningful production.\n...\nGartner projects 40% of agentic AI projects will be cancelled by end-2027 from escalating costs, unclear value, and weak risk controls.\n...\nGartner\u2019s >40% cancellation rate is not a prediction about AI capability.\nIt is a prediction about enterprise discipline \u2014 that cost, value proof, and risk controls will lag ambition by one budget cycle.",
+      "date": "2026-08-23",
+      "last_updated": "2026-08-25"
+    },
+    {
+      "url": "https://intokened.com/en/news/agentic-ai-enterprise-adoption-gap-gartner",
+      "title": "Agentic AI enterprise adoption: the 80% vs 40% gap",
+      "snippet": "Gartner, which sells nothing to these buyers, expects more than 40% of agentic AI projects to be cancelled by the end of 2027.\n...\nGartner put the cancellation figure at over 40% by the end of 2027 and named the causes: escalating costs, unclear business value, inadequate risk controls.",
+      "date": "2026-09-03",
+      "last_updated": "2026-09-10"
+    },
+    {
+      "url": "https://agenticaiarch.com/enterprise-agentic-ai-vision-2030/",
+      "title": "Enterprise Agentic AI Vision 2030: What Changes by 2027 ...",
+      "snippet": "Gartner\u2019s analyst said this plainly: \u201cmost agentic AI projects right now are early stage experiments or proof of concepts that are mostly driven by hype and are often misapplied.\u201d\nGartner forecasts more than 40% of agentic AI projects will be cancelled by the end of 2027 \u2014 killed by escalating costs, unclear business value, and risk controls that never quite got built.",
+      "date": "2026-08-14",
+      "last_updated": "2026-08-26"
+    },
+    {
+      "url": "https://algeriatech.news/enterprise-ai-agents-gartner-40-percent-cancellation-2026/",
+      "title": "Why 40% of AI Agent Projects Will Be Canceled",
+      "snippet": "Gartner projects more than 40% of agentic AI projects will be canceled by the end of 2027, based on polling over 3,400 organizations, with the firm estimating only about 130 vendors out of thousands claiming agentic capability actually deliver it.\n...\nInstead, Gartner\u2019s June 2025 forecast is playing out largely as predicted through mid-2026: more than 40% of agentic AI projects will be canceled by the end of 2027, driven by escalating costs, unclear business value, and inadequate risk controls.\n...\nGartner projects that more than 40% of agentic AI projects will be canceled by the end of 2027, based on a poll of over 3,400 organizations that had invested in the technology.\nThe main causes cited are escalating costs, unclear business value, and inadequate risk controls rather than fundamental technical failure.",
+      "date": "2026-08-28",
+      "last_updated": "2026-08-28"
+    },
+    {
+      "url": "https://www.linkedin.com/posts/alankartchner_gartner-expects-more-than-40-of-agentic-activity-7493297742300098560-TGTL",
+      "title": "Most Agentic AI Projects Will Fail Due to Misuse and Lack of Value",
+      "snippet": "Gartner expects more than 40% of agentic AI projects to be canceled by the end of 2027.\nThe reasons it cites: escalating costs, unclear business value, inadequate risk controls.\n...\nGartner also predicts over 40% of agentic AI projects will be canceled by end of 2027.\n...\nAnd it expects more than 40% of agentic AI projects to be cancelled by the end of 2027.",
+      "date": "2026-08-12",
+      "last_updated": "2026-09-07"
+    },
+    {
+      "url": "https://www.linkedin.com/posts/tn324_gartner-predicts-over-40-of-agentic-ai-projects-activity-7495152467194810369-BqCK",
+      "title": "Gartner: 40% of AI projects to be canceled by 2027 due to cost and ...",
+      "snippet": "Gartner: 40% of AI projects to be canceled by 2027 due to cost and control issues | Trung Nguyen posted on the topic | LinkedIn\n...\nGartner predicts over 40% of agentic AI projects will be canceled by end of 2027.\nTheir three reasons: escalating costs, unclear business value, inadequate risk controls.\n...\nGartner expects more than 40% of agentic AI projects to be cancelled by the end of 2027 \u2014 escalating costs, unclear value, weak risk controls (Gartner).",
+      "date": "2026-08-17",
+      "last_updated": "2026-09-10"
+    },
+    {
+      "url": "https://www.linkedin.com/posts/sanyashahpredflow_gartner-expects-40-of-agentic-ai-projects-activity-7495378412103139328-ut66",
+      "title": "Gartner: 40% of AI projects to be cancelled by 2027 due ...",
+      "snippet": "Gartner predicts 40% of AI projects will be cancelled by 2027 due to cost and data issues | Sanya Shah posted on the topic | LinkedIn\n...\nGartner expects 40% of agentic AI projects to be cancelled by 2027.\nThe report gives the reasons you would expect, including cost, unclear value and immature tooling.\n...\nGartner says over 40% of agentic AI projects will get canceled by 2027.\nCost overruns, unclear ROI, weak risk controls.\n...\nGartner\u2019s actual forecast is even more specific: more than 40% of agentic AI projects will be cancelled by the end of 2027 because of rising costs, unclear business value, or inadequate risk controls.",
+      "date": "2026-08-18",
+      "last_updated": "2026-09-10"
+    },
+    {
+      "url": "https://www.linkedin.com/posts/optimum-consultancy-services_aigovernance-aiagents-enterpriseai-activity-7496219521662365697-IMBP",
+      "title": "Gartner: 40% of AI projects to be canceled by 2027 due ...",
+      "snippet": "More than 40% of agentic AI projects will be canceled by the end of 2027, according to Gartner's own research.\nThe reasons cited include escalating costs, unclear business value, and inadequate risk controls, not the technology failing to work.\n...\nGartner expects more than 40% of agentic AI projects to be cancelled by the end of 2027 \u2014 escalating costs, unclear value, weak risk controls (Gartner).",
+      "date": "2026-08-20",
+      "last_updated": "2026-09-09"
+    },
+    {
+      "url": "https://medium.com/@vlada.kliuiko/two-gartner-predictions-about-ai-agents-both-are-true-7dcb51e865aa",
+      "title": "Two Gartner Predictions About AI Agents. Both Are True.",
+      "snippet": "TL;DR.Gartner predicts 40% of enterprise applications will carry task-specific AI agents by the end of 2026, up from under 5% a year earlier \u2014 an eightfold jump.\nThe same firm predicts over 40% of agentic AI projects will be cancelled by the end of 2027, mostly for unclear business value.\nBoth are true, and the gap between them is methodology.\n...\nGartner's second forecast \u2014over 40% of agentic AI projects cancelled by the end of 2027\u2014 attributes the failures to unclear business value, escalating costs, and inadequate risk controls.\n...\nWhy does Gartner predict 40% of agentic AI projects will be cancelled?Unclear business value, escalating costs, and weak risk controls.",
+      "date": "2026-08-25",
+      "last_updated": "2026-08-25"
+    },
+    {
+      "url": "https://www.linkedin.com/posts/vinayarora_gartner-over-40-of-agentic-ai-projects-activity-7494616041596260352-fvNj",
+      "title": "Gartner: Over 40% of Agentic AI Projects Will Be Canceled ...",
+      "snippet": "Gartner predicted last year that over 40% of agentic AI projects would be cancelled by end of 2027 citing escalating costs, unclear value, and weak risk controls.\n...\nGartner: Over 40% of Agentic AI Projects Will Be Canceled by End 2027 gartner.com\n...\n1 Reaction 2 Reactions\n...\n1 Reaction 2 Reactions",
+      "date": "2026-08-16",
+      "last_updated": "2026-09-07"
+    },
+    {
+      "url": "https://investor.salesforce.com/news/news-details/2026/Salesforce-Delivers-Record-Second-Quarter-Fiscal-2027-Results/default.aspx",
+      "title": "Salesforce Delivers Record Second Quarter Fiscal 2027 Results",
+      "snippet": "Operating cash flow of $1.3 billion, up 71% Y/Y, and free cash flow of $1.1 billion, up 81% Y/Y\n...\n- Agentforce and Data 360 annual recurring revenue (\"ARR\") reached nearly $3.9 billion, up over 210% Y/Y\n- Agentforce ARR exceeded $1.5 billion, up over 240% Y/Y.\nEffective Q2 FY27, Agentforce ARR includes our AI offerings, Slackbot and Headless 360\n- 7.0 billion Agentic Work Units (\u201cAWUs\u201d) delivered to date across Agentforce and Slack, with 3.2 billion in Q2, growing 97% quarter-over-quarter (\"Q/Q\")\n- Slack \n...\n- Initiates third quarter FY27 revenue guidance of $11.42 billion to $11.5 billion, up 11% - 12% Y/Y and in CC, including slightly above 4pts Informatica contribution\n...\nThe Company defines an Agentic Work Unit (\"AWU\") as a measure of discrete tasks executed by AI agents in production across the Salesforce platform, including Agentforce and Slack.\nAWUs represent the conversion of generative AI capabilities into measurable business outputs, such as resolving customer cases, updating records or triggering automated workflows.\n...\nInvestor Relations\ninvestor@sale\nsforce.com",
+      "date": "2026-08-26",
+      "last_updated": "2026-09-09"
+    },
+    {
+      "url": "https://investor.salesforce.com/news/news-details/2026/Salesforce-Completes-Acquisition-of-Fin/default.aspx",
+      "title": "Salesforce Completes Acquisition of Fin",
+      "snippet": "The close of the acquisition brings Fin\u2019s customer agent platform and world-class technical AI team to Salesforce, along with an established global customer base of more than 30,000 companies.",
+      "date": "2026-09-10",
+      "last_updated": "2026-09-10"
+    },
+    {
+      "url": "https://www.salesforce.com/news/stories/salesforce-simplifies-editions-2026/?bc=OTH",
+      "title": "Salesforce Simplifies Editions",
+      "snippet": "To reflect the added value of enterprise-grade tools like Slack, Tableau, and native data security, we are introducing new pricing for the Core and Advanced Editions, while the Max Edition will maintain the same pricing as the Agentforce 1 Edition:\n- **Core Editions:** $195 per user/month (offering 70% more value than legacy Enterprise Edition)\n- **Advanced Editions:** $395 per user/month (offering more than 50% more value than legacy Unlimited Edition)\n- **Max Editions:** $550 per user/month (zero pricing change and offering nearly 60% more value than Agentforce 1 Edition)",
+      "date": "2026-09-03",
+      "last_updated": "2026-09-03"
+    },
+    {
+      "url": "https://www.salesforce.com/news/stories/customer-success-award-winners-2026/?bc=OTH",
+      "title": "What It Takes to Make AI Customer Service Actually Work",
+      "snippet": "These improvements might not spark as much pride as winning on the pitch, but they\u2019ve certainly made a difference to the bottom line, saving 80,000 minutes in the first month and on track to handle over 200,000 calls a year.",
+      "date": "2026-09-02",
+      "last_updated": "2026-09-02"
+    },
+    {
+      "url": "https://www.salesforce.com/news/stories/idc-marketscape-vendor-assessment-2026-announcement/?bc=OTH",
+      "title": "Salesforce Named a Leader in IDC MarketScape",
+      "snippet": "**Federal civilian momentum:** Salesforce recently announced new initiatives with U.S. federal civilian agencies including the Department of Veterans Affairs and the Department of Transportation.",
+      "date": "2026-08-19",
+      "last_updated": "2026-08-26"
+    },
+    {
+      "url": "https://investor.salesforce.com/news/news-details/2026/Salesforce-and-Anthropic-Announce-Claudeforce-The-1-AI-Meets-the-1-AI-CRM/default.aspx",
+      "title": "Salesforce and Anthropic Announce Claudeforce",
+      "snippet": "- Salesforce in Claude is available to select pilot customers now and expects to launch in open beta in September 2026.\n- Additional prebuilt skills will begin launching in late 2026.",
+      "date": "2026-08-26",
+      "last_updated": "2026-08-26"
+    },
+    {
+      "url": "https://www.salesforce.com/news/stories/winter-2027-product-release-announcement/?bc=OTH",
+      "title": "Top Innovations in the Winter '27 Release: AI Agents Run the Work ...",
+      "snippet": "Agentic Commerce Search drives a 13% conversion lift for shopper agents live today.\nFour customers, including PowerSchool with more than 550 users, are already running Adaptive Experience in production.\n...\nAn ambient AI agent listens to case and messaging conversations in real time, reasoning over live context to generate and update resolution plans as issues change.\nFour customers are already live in production, including PowerSchool with more than 550 users, as the broader Service Rep Assistant program surpasses 100 customers.\n- **Agentforce Contact Center: Expands globally to over 30 countries*\n* ** Agentforce Contact Center is now available in over 30 countries, giving global contact centers the ability to bring CRM, channels, and AI together in a single solution for the first time.\n...\nThe Winter \u201927 Release is generally available October 12, 2026.",
+      "date": "2026-08-31",
+      "last_updated": "2026-08-31"
+    },
+    {
+      "url": "https://openai.com/index/introducing-the-agents-api",
+      "title": "Introducing the Agents API",
+      "snippet": "Today, we\u2019re introducing the Agents API\u2060(opens in a new window) in public beta, bringing that same harness and infrastructure that powers Codex to developers through a simple, flexible API.\nWith the Agents API, you can create a production-ready agent in a single API call by specifying the task, model, tools, and environment:\n...\nAgents API is available in public beta today to all developers.\nThere are no additional fees for using the Agents API \u2013 you simply pay for the tokens and tools your agents use, as outlined on our pricing page\u2060(opens in a new window).",
+      "date": "2026-09-10",
+      "last_updated": "2026-09-10"
+    },
+    {
+      "url": "https://www.salesforce.com/news/stories/fy27-q2-highlights/?bc=OTH",
+      "title": "Salesforce Quarterly Highlights: FY27 Q2 Product Releases and Corporate Announcements",
+      "snippet": "## Product updates:\n...\n- **Agentforce Help Agent** **: ** To help enterprises resolve customer issues from start to finish, Salesforce launched Agentforce Help Agent, which deploys in minutes with guided setup.",
+      "date": "2026-08-26",
+      "last_updated": "2026-08-26"
+    },
+    {
+      "url": "https://www.salesforce.com/news/stories/author/barrypchaiken/page/104/?bc=OTH",
+      "title": "Page 104",
+      "snippet": "### Smarsh Scales Salesforce\u2019s Agentforce After Delivering Strong Customer Support Results\n...\n### 1 Year, 70,000 Users: What Salesforce Learned as Customer Zero for Employee Agent",
+      "date": "2026-09-03",
+      "last_updated": "2026-09-07"
+    },
+    {
+      "url": "https://openai.com/index/introducing-gpt-live-1-in-the-api/",
+      "title": "Build more natural voice experiences with GPT\u2011Live\u20111 in the API",
+      "snippet": "GPT\u2011Live\u20111 is available in the API today\u2060(opens in a new window) at $0.05 per minute for the front-end voice layer.",
+      "date": "2026-09-10",
+      "last_updated": "2026-09-10"
+    },
+    {
+      "url": "https://openai.com/index/previewing-ultrafast/",
+      "title": "Previewing Ultrafast mode: GPT-5.6 Sol at up to 14X the speed",
+      "snippet": "Today, we're sharing an early look at Ultrafast, a new service tier that runs GPT\u20115.6 Sol up to 14\u00d7 faster than Standard processing, launching first in the ...",
+      "date": "2026-08-13",
+      "last_updated": "2026-09-10"
+    },
+    {
+      "url": "https://www.salesforce.com/news/stories/author/carang-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-3/page/13/?bc=OTH",
+      "title": "Page 13 - Salesforce",
+      "snippet": "### Smarsh Scales Salesforce\u2019s Agentforce After Delivering Strong Customer Support Results\n...\n### 1 Year, 70,000 Users: What Salesforce Learned as Customer Zero for Employee Agent",
+      "date": "2026-09-03",
+      "last_updated": "2026-09-07"
+    },
+    {
+      "url": "https://www.salesforce.com/news/stories/agentic-ai-leaders-survey-on-roi/?bc=OTH",
+      "title": "Agentic AI Study: Preparation Beats Speed for ROI - Salesforce",
+      "snippet": "Agent deployments more than doubled over the past year, according to Salesforce\u2019s platform data, and those agents are driving real results.\n...\nOther key results: Among the 30% already running agents in production, deployments reach ROI in about eight months, with an employee adoption rate of 53% and a 29% average lift in customer satisfaction.",
+      "date": "2026-08-27",
+      "last_updated": "2026-08-27"
+    },
+    {
+      "url": "https://www.salesforce.com/news/stories/author/carang-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-3/page/14/?bc=OTH",
+      "title": "Page 14 - Salesforce",
+      "snippet": "### Everything from Dreamforce 2026: Claudeforce, Customer Success, and Agents at Scale",
+      "date": "2026-09-10",
+      "last_updated": "2026-09-10"
+    },
+    {
+      "url": "https://github.blog/changelog/2026-09-04-gpt-6-astra-is-generally-available-in-github-copilot/",
+      "title": "GPT-6 Astra is generally available in GitHub Copilot",
+      "snippet": "GPT-6 Astra from OpenAI is now available in GitHub Copilot. designed for long-horizon, autonomous coding and agentic tasks. available to Copilot Pro+, Max, ...",
+      "date": "2026-09-05",
+      "last_updated": "2026-09-05"
+    },
+    {
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/08/bedrock-agentcore-two-new-regions/",
+      "title": "Amazon Bedrock AgentCore expands to two new regions - AWS",
+      "snippet": "Amazon Bedrock AgentCore is now available in two additional AWS Regions: US West (N. California) and Asia Pacific (Hyderabad).",
+      "date": "2026-08-27",
+      "last_updated": "2026-08-28"
+    },
+    {
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/08/aws-agent-registry-generally-available/",
+      "title": "AWS Agent Registry for centralized agent discovery and governance ...",
+      "snippet": "# AWS Agent Registry for centralized agent discovery and governance is now generally available\n...\nAWS Agent Registry is now generally available.\nIt provides a private, governed catalog and discovery layer for agents, tools, skills, MCP servers, and custom resources within your organization.\n...\nAccess it through the AWS Agent Registry console, AWS CLI, or AWS SDK.\n...\nAWS Agent Registry is available in five AWS Regions: US West (Oregon), Asia Pacific (Tokyo), Asia Pacific (Sydney), Europe (Ireland), and US East (N. Virginia).",
+      "date": "2026-08-31",
+      "last_updated": "2026-08-31"
+    },
+    {
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/09/amazon-bedrock-agentcore/",
+      "title": "Amazon Bedrock AgentCore Identity now offers a managed ...",
+      "snippet": "Amazon Bedrock AgentCore Identity now offers a managed consent portal that eliminates the need for custom OAuth callback infrastructure when connecting agents to third-party tools and services.\n...\nThis feature is available in all commercial regions where Bedrock AgentCore Identity is available.",
+      "date": "2026-09-01",
+      "last_updated": "2026-09-04"
+    },
+    {
+      "url": "https://about.gitlab.com/press/releases/2026-08-20-gitlab-scales-agentic-ai-across-trusted-software-delivery-workflows/",
+      "title": "GitLab Scales Agentic AI Across Trusted Software Delivery ...",
+      "snippet": "# GitLab Scales Agentic AI Across Trusted Software Delivery Workflows\n- GitLab Dedicated AI Gateway, now generally available, brings agentic AI to regulated and data-sensitive enterprises, letting them run GitLab Duo Agent Platform on GitLab Dedicated in their single tenant environment and region.\n...\nGitLab Dedicated customers, who already run their most sensitive software delivery workloads on GitLab, can now run GitLab Duo Agent Platform inside that same single tenant environment and region, connect their own models for inference, and keep AI-processed data inside their existing security boundary.\n...\nThe AI Gateway for GitLab Duo Agent Platform now runs inside GitLab Dedicated single-tenant SaaS infrastructure, enabling agentic workloads to follow the same residency and isolation model as the rest of the software development lifecycle within GitLab.\n...\nWith Flow Creator, available through Agentic Chat as a foundational agent in GitLab Duo Agent Platform, a user describes the automation in plain language and gets back a complete, runnable flow, ready to register from the AI Catalog.\n...\nGitLab is the intelligent orchestration platform for DevSecOps.\n...\npress@gitlab.com",
+      "date": "2026-08-20",
+      "last_updated": "2026-08-28"
+    },
+    {
+      "url": "https://github.blog/changelog/2026-09-01-claude-fable-5-1-generally-available-in-github-copilot/",
+      "title": "Claude Fable 5.1 is generally available in GitHub Copilot",
+      "snippet": "Claude Fable 5.1 from Anthropic is now available in GitHub Copilot. designed for long-horizon, autonomous coding and knowledge-work tasks. Check back soon if ...",
+      "date": "2026-09-01",
+      "last_updated": "2026-09-02"
+    },
+    {
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/08/aws-agent-registry-agents-mcp-servers-quick/",
+      "title": "AWS Agent Registry agents and MCP servers now available in Amazon Quick - AWS",
+      "snippet": "Today, Amazon Quick announces integration with AWS Agent Registry, enabling users to discover and use resources from their organization's AWS Agent Registry directly within Amazon Quick.\nAWS Agent Registry supports MCP servers and agents, which users can now search and browse directly within Amazon Quick.\nAfter finding the agent or MCP server they need, users can enable it with a few clicks.\nConnection details are already populated from the registry.\nOnce enabled, these resources can be shared with teams for use across chat, agents, apps, flows, and deep research.\n...\nAmazon Quick integration with AWS Agent Registry is available in all AWS Regions where both Amazon Quick and Amazon Bedrock AgentCore are available.\nThis includes US East (N. Virginia), US West (Oregon), Asia Pacific (Sydney), Asia Pacific (Tokyo), Europe (Frankfurt), and Europe (Ireland).\nTo get started, open the Amazon Quick admin console and go to Manage account, Permissions, AWS Agent Registry to connect your registry.",
+      "date": "2026-08-31",
+      "last_updated": "2026-08-31"
+    },
+    {
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/09/sagemaker-cicd-notebook-ai-manifest/",
+      "title": "Amazon SageMaker Unified Studio CI/CD adds notebook promotion ...",
+      "snippet": "Amazon SageMaker Unified Studio CI/CD expands its open-source deployment toolkit with two new capabilities: (1) an AI agent skill that automates manifest authoring, and (2) native notebook promotion across environments.\n...\n** The new generate-bundle-manifest agent skill inspects a project's connections, storage, and workflows and produces a ready-to-use deployment manifest.\n...\n** The CI/CD toolkit now supports promoting native SMUS Notebooks alongside code, workflows, and catalog assets.\n...\nBoth capabilities are open source and available in all AWS Regions where Amazon SageMaker Unified Studio is offered.\nTo get started, visit the CICD-for-SageMakerUnifiedStudio repository on GitHub.",
+      "date": "2026-09-02",
+      "last_updated": "2026-09-03"
+    },
+    {
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/08/console-to-code-adds-26-services/",
+      "title": "AWS Console-to-Code adds 26 services and cross-region ...",
+      "snippet": "AWS Console-to-Code now supports 26 additional AWS services and introduces cross-region and cross-browser-tab action recording.\nThis expansion grows total service coverage from 6 to 32 supported services, helping developers, DevOps engineers, and cloud architects more easily convert manual console workflows into repeatable, production-ready infrastructure as code (IaC).\n\u200bConsole-to-Code also introduces cross-region and cross-browser-tab action recording.\n...\n\u200b\u200b\u200bStarting today, customers in all commercial AWS Regions can use Console-to-Code with all 32 supported services and the new cross-region recording capability.\u200b",
+      "date": "2026-08-17",
+      "last_updated": "2026-08-26"
+    },
+    {
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/09/agentic-cx-designer/",
+      "title": "Amazon Connect Customer announces general availability ...",
+      "snippet": "Amazon Connect Customer announces the general availability of agentic CX designer, a no-code canvas for designing and deploying AI-powered self-service experiences.\n...\nAgentic CX designer is generally available in the following AWS Regions: US East (N. Virginia), US West (Oregon), Canada (Central), Asia Pacific (Tokyo), Asia Pacific (Seoul), Asia Pacific (Singapore), Asia Pacific (Sydney), Europe (Frankfurt), and Europe (London).",
+      "date": "2026-09-02",
+      "last_updated": "2026-09-02"
+    },
+    {
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-ecs-agent-connectivity-health/",
+      "title": "Amazon ECS now automatically detects and repairs container ...",
+      "snippet": "Amazon Elastic Container Service (Amazon ECS) now automatically detects and repairs container instances, enabling customers to reduce undetected workload failures and improve application availability without manual intervention.\n...\nThis capability is available at no additional cost in all AWS Commercial and AWS GovCloud (US) Regions.",
+      "date": "2026-08-24",
+      "last_updated": "2026-08-26"
+    },
+    {
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/09/aws-lambda-durable-pydantic-ai/",
+      "title": "AWS Lambda durable functions integrates with Pydantic AI",
+      "snippet": "Today, AWS Lambda durable functions announces an integration with Pydantic AI, an open source framework for building AI agents in Python.\n...\nYou can use this integration in any Python AWS Lambda durable function.\nIt is available in all AWS Regions where AWS Lambda durable functions is available.",
+      "date": "2026-09-10",
+      "last_updated": "2026-09-10"
+    },
+    {
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/08/web-search-amazon-bedrock/?ref=digioneer.pro",
+      "title": "Web Search in Amazon Bedrock AgentCore adds domain and published date filtering, expands to Europe and Asia Pacific - AWS",
+      "snippet": "Web Search in Amazon Bedrock AgentCore now supports domain filtering and published-date filtering, giving agents per-request control over which web sources and time windows they search.\n...\nThe Web Search Tool is also expanding to Europe (Ireland) (eu-west-1) and Asia Pacific (Tokyo) (ap-northeast-1), joining the existing US East (N. Virginia) (us-east-1) availability.",
+      "date": "2026-08-19",
+      "last_updated": "2026-08-25"
+    },
+    {
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/09/openai-gpt-6-astra-on-amazon-bedrock/",
+      "title": "OpenAI GPT-6 Astra is now generally available on Amazon Bedrock",
+      "snippet": "# OpenAI GPT-6 Astra is now generally available on Amazon Bedrock\n...\nToday, AWS announces the general availability of GPT-6 Astra from OpenAI on Amazon Bedrock.\n...\nYou can call GPT-6 Astra directly through supported Amazon Bedrock APIs or configure ChatGPT Work and Codex to use the model on Amazon Bedrock.",
+      "date": "2026-09-08",
+      "last_updated": "2026-09-09"
+    },
+    {
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/09/aws-lambda-90-minute-function/",
+      "title": "AWS Lambda now supports 90-minute function timeout on Lambda ...",
+      "snippet": "You can configure up to a 90-minute function timeout for asynchronous and ESM invocations via the AWS Lambda Console, AWS CLI, Lambda APIs, Infrastructure as Code tooling, or the Agent Toolkit for AWS.",
+      "date": "2026-09-09",
+      "last_updated": "2026-09-10"
+    },
+    {
+      "url": "https://arxiv.org/abs/2609.02095v1",
+      "title": "READY or Not: Reliable Enterprise Agent Deployment",
+      "snippet": "We introduce Reliable Enterprise Agent Deployment (READY), a framework for qualifying AI agents for deployment on enterprise workflows.\n...\nGiven an agent, a workflow, and a class of candidate oversight policies, READY measures the reliability and operating cost of the human-AI system, selects the minimum-cost policy that satisfies a specified reliability target, and statistically qualifies it on held-out cases.\n...\nIn an end-to-end clinical-audit case study spanning 16 agent systems and 750 cases, READY reveals differences hidden by autonomous performance: two systems separated by only 0.3 points in autonomous accuracy (72.8% vs.\n...\n|Cite as:|arXiv:2609.02095 [cs.AI]|",
+      "date": "2026-09-02",
+      "last_updated": "2026-09-03"
+    },
+    {
+      "url": "https://arxiv.org/abs/2609.01660",
+      "title": "How Fast Do Agents Rot? An Empirical Study of Long-Horizon ...",
+      "snippet": "# Title: How Fast Do Agents Rot?\nAn Empirical Study of Long-Horizon Degradation in LLM Agents for Production Decision-Making\n...\nAbstract:Production deployments of large language model (LLM) agents remain unreliable on long, multi-step workflows even as benchmark success rates climb steadily.\nWe argue this gap is largely an artifact of task horizon: benchmarks are dominated by short-to-medium horizons where success remains high, while production workloads demand an order of magnitude more dependent steps.\n...\nTask success follows a geometric law governed by a single per-step reliability parameter, which rises with model scale but saturates well below 1 even for the strongest models, guaranteeing eventual collapse at sufficiently long horizons.\n...\nProjecting measured reliability onto representative benchmark horizons quantifies a substantial gap between benchmark and production conditions, from 0.42 at GAIA-length horizons to 0.24 at hundred-step production horizons.",
+      "date": "2026-08-31",
+      "last_updated": "2026-09-03"
+    },
+    {
+      "url": "https://arxiv.org/abs/2608.16411v1",
+      "title": "Towards Risk-free AI Agent Deployment",
+      "snippet": "Abstract:LLM-based agents are rapidly moving from research prototypes into the core business processes of organizations, but these agents pose deployment risks to security, compliance, and functionality.\nIn this article, we argue that risk-free deployment must be grounded in the agent's trajectory: the recorded sequence of reasoning steps, tool invocations, and environmental observations.\nTrajectories are available for any agent, and many failures are visible only in the trajectory.\nTo make agents deployable and sustainable, we advocate agent testing and debugging as a systematic research direction for detecting and mitigating these risks.",
+      "date": "2026-08-17",
+      "last_updated": "2026-08-18"
+    },
+    {
+      "url": "https://arxiv.org/abs/2608.13867",
+      "title": "[2608.13867] Engineering Reliable Coding Agents: Evaluating and ...",
+      "snippet": "# Title: Engineering Reliable Coding Agents: Evaluating and Operating the System Around the Model",
+      "date": "2026-08-14",
+      "last_updated": "2026-08-28"
+    },
+    {
+      "url": "https://arxiv.org/html/2608.11323v1",
+      "title": "Deployment Decision Reliability:A Generalizability-Theory ... - arXiv",
+      "snippet": "Abstract. Enterprise practitioners read agent leaderboards as if they ranked agent capability. We show, across three open agent-trace benchmarks ...",
+      "date": "2026-08-11",
+      "last_updated": "2026-08-13"
+    },
+    {
+      "url": "https://arxiv.org/pdf/2609.04681",
+      "title": "[PDF] Reliability, Verification, and Cost Economics in the Agentic Software ...",
+      "snippet": "a 2026 study of more than 100,000 GitHub developers found a much larger cumulative increase in coding activity from autonomous agents - 180% at the commit level",
+      "date": "2026-09-04",
+      "last_updated": "2026-09-07"
+    },
+    {
+      "url": "https://blog.pebblous.ai/report/multiagent-shared-resource-turf-war-2026-08/en/",
+      "title": "Why AI Agents Started a Turf War Over Shared Code",
+      "snippet": "The experiment log Anthropic's Frontier Red Team published on August 13, 2026 is primary evidence of what breaks first when you put many agents on one job.\n...\n|Experiment|Setup|Shared resource|Observed outcome|",
+      "date": "2026-08-15",
+      "last_updated": "2026-08-24"
+    },
+    {
+      "url": "https://arxiv.org/abs/2608.11584v1",
+      "title": "EnterpriseRAG: Benchmarking LLM Instruction Adherence and Robustness under Non-Ideal Enterprise Retrieval",
+      "snippet": "# Title: EnterpriseRAG: Benchmarking LLM Instruction Adherence and Robustness under Non-Ideal Enterprise Retrieval\n...\nAbstract:Enterprise RAG deployments face a critical reliability gap: while LLMs satisfy 80% of individual constraints, only 26.8% of responses meet all requirements simultaneously, revealing a 57-point orchestration gap.\nExisting benchmarks assume clean retrieval with simple queries, failing to capture production conditions where noisy documents and multi-dimensional constraints coexist.\nWe introduce EnterpriseRAG, a benchmark of 983 expert-validated samples across six domains that systematically simulates three failure modes absent from prior work: retrieval noise, knowledge gaps, and factual conflicts, coupled with complex instructions.\nEvaluation of 13 state-of-the-art LLMs reveals a severe instruction adherence collapse, where high per-constraint satisfaction masks low holistic compliance.\nCritical findings expose deep barriers under knowledge gaps and factual conflicts, even with reasoning-enhanced inference, indicating production RAG requires explicit context-aware protocols and calibrated judgment.\nEnterpriseRAG provides a reproducible foundation for measuring and closing these gaps, directly informing deployment decisions for enterprise-scale RAG systems.",
+      "date": "2026-08-12",
+      "last_updated": "2026-08-13"
+    },
+    {
+      "url": "https://arxiv.org/abs/2608.17177",
+      "title": "[2608.17177] Grounding AI Agents in Contracts: An Empirical ...",
+      "snippet": "Our evaluation on production bugs from Google shows that the spec-driven agent can deliver a 9.8 percentage points ($p = 0.0352$) improvement in bug detection rate and a 2.5 percentage point ($p = 0.0034$) improvement in branch coverage, compared to a traditional test generation agent baseline.",
+      "date": "2026-08-17",
+      "last_updated": "2026-09-02"
+    },
+    {
+      "url": "https://arxiv.org/abs/2608.16402",
+      "title": "A Policy Algebra for Trust-Preserving Agentic AI Execution",
+      "snippet": "This paper defines reliable capability as a path property: an agent is reliably capable only when it completes a task through action events that remain admissible under identity, profile, tool, data, memory, budget, artifact, approval, and audit constraints.\n...\nThe evaluation is interpreted as a reliability-capability trade-off rather than a capability benchmark: the policy-algebra runtime intervenes on 94.8% of policy-violating events while retaining an 86.9% task-completion rate, eliminates the observed profile-monotonicity and zero-artifact-exhaustion violations, and increases audit completeness to 98.6%.\n...\n|Cite as:|arXiv:2608.16402 [cs.AI]|",
+      "date": "2026-08-17",
+      "last_updated": "2026-08-18"
+    },
+    {
+      "url": "https://arxiv.org/abs/2608.18389",
+      "title": "A Jagged Frontier: Evaluating Robustness of Code Agents to ... - arXiv",
+      "snippet": "Our results demonstrate that even top frontier models are susceptible to semantics-preserving perturbations although the effect is not uniform, raising concerns about the deployment reliability of AI code agents in diverse real-world codebases.",
+      "date": "2026-08-18",
+      "last_updated": "2026-08-26"
+    },
+    {
+      "url": "https://arxiv.org/abs/2608.18740",
+      "title": "A Multi-Agent Platform for Automated Enterprise Analytics ...",
+      "snippet": "Evaluation across 300 end-to-end test cases spanning synthetic and production enterprise datasets demonstrates 95.3% functional accuracy, a mean response latency of 24 seconds, and a response quality score of 4.52/5.0 as assessed by an LLM-as-a-Judge framework, with a 93.0% hallucination-free rate, representing a 22.6 percentage point accuracy improvement and 20.2% quality gain over a single-agent baseline.",
+      "date": "2026-08-19",
+      "last_updated": "2026-08-25"
+    }
+  ],
+  "citations": [],
+  "queries": [
+    "agentic AI production deployments failure rate 2026",
+    "AI agents production survey 2026 deployment failures",
+    "agentic AI enterprise production 2025 2026 report",
+    "site:mckinsey.com state of AI 2025 agentic AI production survey",
+    "site:deloitte.com 2026 state of AI agentic AI production",
+    "site:gartner.com agentic AI projects 40% 2027",
+    "2026 company launched AI agent production customer support coding agent official",
+    "2025 2026 agentic AI production deployment case study official",
+    "site:openai.com agents production customer 2026",
+    "AI agent production failure survey 2026 enterprise primary research",
+    "AI agent incidents production 2025 2026 reliability study",
+    "agentic AI deployment failures 2026 survey",
+    "site:gartner.com/en/newsroom 40% agentic AI projects canceled 2027 June 2025",
+    "Gartner Predicts Over 40% Agentic AI Projects Will Be Canceled by End of 2027 official",
+    "site:investor.salesforce.com AI agents production 2026 Agentforce customers numbers",
+    "site:salesforce.com/news/stories Agentforce production customers 2026",
+    "site:openai.com/index customer service agent production 2026",
+    "site:github.blog 2026 coding agent generally available",
+    "site:about.gitlab.com 2026 Duo Agent Platform general availability",
+    "site:aws.amazon.com/about-aws/whats-new 2026 DevOps agent",
+    "Pebblous 3607 AI agent incidents original report 2026",
+    "site:venturebeat.com/resources context layers 101 enterprises 2026 survey",
+    "site:arxiv.org AI agents production reliability 2026 enterprise deployment study"
+  ],
+  "raw": "C:\\Users\\tommy\\Dropbox\\My PC (DESKTOP-B1TU6R0)\\Desktop\\NEWSLETTER DEMO\\.tmp\\research-agentic-ai-in-production-what-is-actually-shipping-where-dep.raw.json"
+}

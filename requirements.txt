@@ -1,6 +1,9 @@
 python-dotenv>=1.0
 requests>=2.32
 
+# Research — official Perplexity SDK (Agent API, POST /v1/agent)
+perplexityai>=0.43
+
 # Templating — drives every HTML asset and the MJML source
 jinja2>=3.1
 

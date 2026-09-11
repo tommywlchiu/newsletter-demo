@@ -18,7 +18,7 @@ Ask for anything missing before starting. Don't invent a topic or a recipient.
 ## Tools
 | Step | Tool | Command |
 | ---- | ---- | ------- |
-| 2 | `tools/research_topic.py` | `python tools/research_topic.py --topic "<topic>" --preset high --recency month` |
+| 2 | `tools/research_topic.py` | `python tools/research_topic.py --topic "<topic>" --preset medium --recency month` |
 | 5 | `tools/check_claims.py` | `python tools/check_claims.py --infographics .tmp/ig_*.json --research .tmp/research-<slug>.json` |
 | 6 | `tools/render_png.py` | `python tools/render_png.py --template templates/infographics/<type>.html.j2 --out .tmp/img/<cid>.png --data-file .tmp/<cid>.json --scale 2` |
 | 7 | `tools/build_email.py` | `python tools/build_email.py --data-file .tmp/issue.json --out .tmp/issue.html --text-out .tmp/issue.txt --preview-out .tmp/preview.html --images .tmp/img` |
@@ -31,10 +31,17 @@ All commands run with `.venv/Scripts/python.exe` on this machine.
 1. **Check the archive.** Read `archive/` for the last few issues. If the topic overlaps
    one, say so and ask whether to proceed, angle differently, or pick another.
 
-2. **Research.** Run `research_topic.py`. It writes a corpus to `.tmp/research-<slug>.json`
-   and always keeps the raw response beside it. Read the briefing before continuing —
-   if it came back with fewer than 5 sources or reads thin, widen `--recency` or raise
-   `--preset` and run again rather than writing from weak material.
+2. **Research.** Run `research_topic.py`. It writes three files: the corpus
+   (`.tmp/research-<slug>.json`), a readable markdown briefing (`.md`), and the raw
+   API response (`.raw.json`). Read the markdown briefing before continuing.
+
+   Presets trade cost against depth: `fast` (1 step) for a quick check, `medium`
+   (15 steps, multi-hop browsing) as the default, `high` (stronger model, same 15
+   steps) for a flagship issue. If it came back with fewer than 5 sources or reads
+   thin, widen `--recency` or raise `--preset` rather than writing from weak material.
+
+   The corpus binds each figure to the `source_url` that supports it, so step 5 can
+   check figures against sources rather than against loose prose.
 
 3. **Outline.** Pick 3–4 stories, strongest first. For each: a heading, an optional dek,
    and 2–3 short paragraphs. Lead with the finding, never the setup.
@@ -129,3 +136,22 @@ html2text only per paragraph, for inline markup.
 
 **2026-09-10 — Perplexity endpoint.** Build against `POST /v1/agent`. The Sonar
 `/chat/completions` endpoint was retired 2026-09-27; most tutorials online still show it.
+
+**2026-09-10 — Agent API request shape, from the docs rather than guessed.** Three
+things a hand-rolled version got wrong, all verified against
+`docs.perplexity.ai/docs/agent-api/`:
+- Use the official SDK: `client.responses.create(...)`, not raw POSTs.
+- Search filters nest **inside the tool**: `tools=[{"type":"web_search","filters":
+  {"search_recency_filter":"month"}}]`. Top-level `search_recency_filter` is the old
+  Sonar chat-completions style and is not the Agent API shape.
+- `max_steps` has a floor of 3 — below that, tools never initialise and the run comes
+  back ungrounded.
+
+Also: anything passed alongside a `preset` **overrides** that preset's default. Passing
+`tools` to add a filter therefore replaces the whole toolset, so `research_topic.py`
+re-adds `fetch_url` explicitly to avoid silently narrowing what the preset had enabled.
+
+**2026-09-10 — Research comes back as structured JSON.** `response_format` with a
+`json_schema` makes the agent bind every figure to the `source_url` supporting it,
+instead of burying numbers in prose that something downstream has to re-parse. The
+readable briefing is rendered from that structure, not the other way round.

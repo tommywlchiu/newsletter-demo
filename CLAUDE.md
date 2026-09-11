@@ -60,6 +60,9 @@ This loop is how the framework improves over time.
 .tmp/           # Temporary files (scraped data, intermediate exports). Regenerated as needed.
 tools/          # Python scripts for deterministic execution
 workflows/      # Markdown SOPs defining what to do and how
+brand/          # Brand source of truth (brand.json) + generated logo/guidelines PNGs
+templates/      # Jinja2 templates: the email shell and the infographic types
+archive/        # Past issues (HTML, PNGs, research corpus) — committed, read for dedup
 .env            # API keys and environment variables (NEVER store secrets anywhere else)
 credentials.json, token.json  # Google OAuth (gitignored)
 ```

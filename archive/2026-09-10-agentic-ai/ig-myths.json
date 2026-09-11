@@ -1,0 +1,29 @@
+{
+  "eyebrow": "Check before you quote",
+  "title": "Three numbers that keep getting repeated",
+  "columns": ["Widely repeated", "What the sources actually say"],
+  "rows": [
+    {
+      "cells": [
+        "88% of agent pilots never reach production",
+        "No identifiable primary publication supports this. It circulates via secondary blogs."
+      ],
+      "highlight": false
+    },
+    {
+      "cells": [
+        "40% of agentic projects have already failed",
+        "Gartner's figure is a forecast for projects cancelled by end of 2027 — not an observed rate."
+      ],
+      "highlight": false
+    },
+    {
+      "cells": [
+        "Semantic layers make agents less reliable",
+        "They surface more failures because they detect them. The source warns explicitly against reverse causation."
+      ],
+      "highlight": false
+    }
+  ],
+  "source": "Corrections identified across Gartner, VentureBeat Pulse and secondary coverage, Sept 2026"
+}

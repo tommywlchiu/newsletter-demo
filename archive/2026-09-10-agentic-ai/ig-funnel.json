@@ -1,0 +1,12 @@
+{
+  "eyebrow": "The narrow funnel",
+  "title": "Having agents and scaling agents are different things",
+  "subtitle": "Share of surveyed organisations at each stage.",
+  "bars": [
+    { "label": "Tested or deployed agents", "value": 42, "display": "42%", "slot": 1 },
+    { "label": "Scaled multi-agent workflows", "value": 15, "display": "15%", "slot": 2 },
+    { "label": "Processes highly prepared", "value": 5, "display": "5%", "slot": 3 }
+  ],
+  "footnote": "Same survey, same respondents — so these stages are directly comparable.",
+  "source": "Deloitte, April–June 2026 survey of 501 U.S. senior-manager-to-C-suite respondents"
+}

@@ -1,0 +1,80 @@
+{
+  "issue": "001",
+  "date": "10 September 2026",
+  "subject": "Every agent tested collapsed within 16 steps",
+  "preheader": "42% of organisations have agents. 15% have scaled them. And the 88% failure stat everyone quotes has no source.",
+  "intro": "Agentic AI is genuinely shipping — but as bounded systems inside customer service, software delivery and workflow automation, not as autonomous digital employees. The interesting question is no longer whether agents work in a demo. It's what happens on step 17.",
+
+  "stories": [
+    {
+      "heading": "Every model collapsed within 16 steps",
+      "dek": "Benchmark scores do not survive contact with long tasks.",
+      "body": [
+        "A study submitted on 31 August tested nine models — six open ones ranging from 1.2 billion to 671 billion parameters, plus three deployed proprietary systems — across <strong>10,664 trajectories</strong>. On the agentic tool-use task, every single model fell from near-perfect success to near zero within <strong>16 steps</strong>.",
+        "That's the finding worth sitting with. Not \"some models degrade at length\" — all of them did, inside a horizon shorter than most real workflows. Errors compound, and a chain of dependent actions is exactly where compounding bites.",
+        "Fair caveat: this is a preprint, not an audited field study. But it explains something practitioners keep reporting — a system that aces a benchmark still falls over on a Tuesday. A second preprint makes the operational version of the same point: two clinical-audit systems with autonomous accuracy of <strong>72.8% and 72.5%</strong> — a gap of 0.3 points — needed <strong>39.2% versus 29.6%</strong> human review to hit the same reliability target. Near-identical scores, materially different running costs."
+      ],
+      "image": {
+        "cid": "ig-cliff",
+        "alt": "Every one of nine models tested collapsed from near-perfect success to near zero within 16 steps, across 10,664 trajectories. Models ranged from 1.2 billion to 671 billion parameters plus three proprietary systems.",
+        "caption": "Nine models. Not one of them held past step 16."
+      }
+    },
+    {
+      "heading": "Having agents and scaling agents are different things",
+      "dek": "The gap between the two is where most of the disappointment lives.",
+      "body": [
+        "Deloitte surveyed 501 U.S. senior managers and executives between April and June. <strong>42%</strong> had tested or deployed AI agents. Only <strong>15%</strong> had scaled orchestrated, multi-agent adoption. Just <strong>5%</strong> said their business processes were highly prepared for agents — and <strong>70%</strong> said they did not feel able to trust and govern them.",
+        "McKinsey's numbers read more optimistically: 40% of respondents at organisations above $1 billion in revenue said they were scaling agents in at least one function, against 22% at smaller ones. Those aren't contradictory figures, they're different questions — McKinsey counts scaling in a single function and doesn't require multi-agent orchestration. Worth knowing which definition a headline is leaning on.",
+        "As for why the funnel narrows: the most credible failure mode isn't dramatic hallucination, it's context. In a July survey of 101 enterprises, <strong>68%</strong> traced at least one confident-but-wrong agent answer to missing or inconsistent business context in the prior six months, and 37% said it kept happening. Stale data, inconsistent metric definitions, incomplete retrieval. The model isn't lying to you — it's being handed the wrong version of your business and reasoning impeccably from it."
+      ],
+      "image": {
+        "cid": "ig-funnel",
+        "alt": "Of surveyed organisations, 42 percent have tested or deployed agents, 15 percent have scaled multi-agent workflows, and only 5 percent say their business processes are highly prepared.",
+        "caption": "Same survey, same respondents — so the drop-off is real, not an artefact of comparing studies."
+      }
+    },
+    {
+      "heading": "Three numbers that keep getting repeated",
+      "dek": "All three fall apart when you look for the primary source.",
+      "body": [
+        "The claim that <strong>88% of agent pilots never reach production</strong> is everywhere. Searching for the study behind it turns up secondary blogs citing each other, not an identifiable primary publication. Treat it as folklore until someone produces the source.",
+        "Gartner's \"more than 40%\" is real but routinely misread. It is a <em>forecast</em> for agentic-AI projects that will be cancelled by the end of 2027 — not an observed failure rate that has already happened.",
+        "The subtlest one: organisations that built a semantic or context layer reported <em>more</em> recurring failures than those without. That reads like an indictment until you notice the direction of causation — a context layer is what lets you detect and attribute failures you were previously shipping blind. The source warns about this explicitly. Better instrumentation, not worse agents."
+      ],
+      "image": {
+        "cid": "ig-myths",
+        "alt": "Three widely repeated claims and what the sources actually say. The 88 percent pilot failure figure has no identifiable primary source. Gartner's 40 percent is a forecast of cancellations by end of 2027, not an observed rate. Semantic layers surface more failures because they detect them.",
+        "caption": "Check the primary source before quoting any of these."
+      }
+    },
+    {
+      "heading": "Four weeks of plumbing, not demos",
+      "dek": "What actually shipped recently is deployment control, not new capability.",
+      "body": [
+        "GitLab put agentic workloads inside its single-tenant Dedicated environment on 20 August, aimed at regulated customers. AWS made its Agent Registry generally available across five regions — governed discovery of agents, tools, skills and MCP servers. OpenAI's Agents API entered public beta today.",
+        "Salesforce, meanwhile, offered rare production telemetry: <strong>7.0 billion agentic work units</strong> delivered to date, <strong>3.2 billion</strong> in fiscal Q2 alone, up 97% quarter over quarter. That's vendor-reported and specific to one platform — it isn't a market-wide deployment rate, and it doesn't establish that every task was autonomous or profitable. But it's a lot more concrete than a pilot count.",
+        "The through-line: identity, tenancy, tool permissions, registries. Nobody is shipping a smarter agent this month. They're shipping the machinery for letting one near your production systems without losing track of what it did."
+      ],
+      "image": {
+        "cid": "ig-shipped",
+        "alt": "Timeline of recent releases: GitLab put agents in single-tenant Dedicated on 20 August 2026; Salesforce reported 7.0 billion agentic work units on 26 August; AWS Agent Registry reached general availability in August across 5 regions; OpenAI's Agents API entered public beta on 10 September 2026.",
+        "caption": "The pattern is governance infrastructure, not model capability."
+      }
+    }
+  ],
+
+  "sources": [
+    { "label": "Deloitte — survey on AI readiness and agentic AI success (Apr–Jun 2026, n=501)", "url": "https://www.deloitte.com/us/en/about/press-room/deloitte-survey-examines-ai-readiness-agentic-ai-success.html" },
+    { "label": "McKinsey — The State of AI (fieldwork May 4–Jun 8 2026, n=1,719 across 97 countries)", "url": "https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai" },
+    { "label": "arXiv 2609.01660 — long-horizon degradation across 10,664 trajectories (preprint)", "url": "https://arxiv.org/abs/2609.01660" },
+    { "label": "arXiv 2609.02095 — READY deployment-qualification method (preprint)", "url": "https://arxiv.org/abs/2609.02095v1" },
+    { "label": "VentureBeat Pulse — agent context layers survey (Jul 2026, n=101)", "url": "https://venturebeat.com/resources/agent-context-layers-enterprises-governing-their-ai-data-are-catching-twice-as-many-bad-answers-as-the-ones-who-arent" },
+    { "label": "Salesforce — Q2 FY2027 results, agentic work units", "url": "https://investor.salesforce.com/news/news-details/2026/Salesforce-Delivers-Record-Second-Quarter-Fiscal-2027-Results/default.aspx" },
+    { "label": "AWS — Agent Registry generally available", "url": "https://aws.amazon.com/about-aws/whats-new/2026/08/aws-agent-registry-generally-available/" },
+    { "label": "GitLab — agentic AI across trusted software delivery workflows", "url": "https://about.gitlab.com/press/releases/2026-08-20-gitlab-scales-agentic-ai-across-trusted-software-delivery-workflows/" },
+    { "label": "OpenAI — introducing the Agents API", "url": "https://openai.com/index/introducing-the-agents-api" }
+  ],
+
+  "signoff": "Two preprints and two vendor surveys carry a lot of this issue. Weight them accordingly — and if you find the primary source for that 88% figure, send it over."
+}

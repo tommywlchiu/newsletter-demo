@@ -155,6 +155,7 @@ def render_template(template: Path, context: dict[str, Any]) -> str:
     """
     try:
         from jinja2 import Environment, FileSystemLoader, StrictUndefined
+        from jinja2.exceptions import TemplateError
     except ImportError as exc:
         raise ToolError("jinja2 is not installed. Run: pip install jinja2") from exc
 
@@ -168,7 +169,18 @@ def render_template(template: Path, context: dict[str, Any]) -> str:
         autoescape=False,
     )
     context = {**context, "brand": context.get("brand") or load_brand()}
-    return env.get_template(template.relative_to(ROOT).as_posix()).render(**context)
+    try:
+        tpl = env.get_template(template.relative_to(ROOT).as_posix())
+        return tpl.render(**context)
+    except TemplateError as exc:
+        # A typo'd variable or a bad {% %} tag is an expected authoring mistake,
+        # not an "unforeseen" bug — route it through the same clean JSON-on-stdout
+        # path as every other explainable failure, instead of a bare traceback.
+        location = ""
+        lineno = getattr(exc, "lineno", None)
+        if lineno:
+            location = f" ({template.name}:{lineno})"
+        raise ToolError(f"Template error in {template.name}{location}: {exc}") from exc
 
 
 def run(main_fn) -> None:

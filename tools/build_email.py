@@ -26,7 +26,19 @@ def compile_mjml(source: str) -> str:
     except ImportError as exc:
         raise ToolError("mjml is not installed. Run: pip install mjml") from exc
 
-    result = mjml_to_html(io.StringIO(source))
+    try:
+        result = mjml_to_html(io.StringIO(source))
+    except Exception as exc:
+        # mjml_to_html's `errors` list only catches problems the library itself
+        # recognizes as recoverable. An unknown tag (e.g. a typo'd mj-* element,
+        # or one nested somewhere MJML doesn't allow) throws a raw KeyError deep
+        # in its internals instead — confirmed by deliberately triggering one.
+        raise ToolError(
+            f"MJML failed to compile: {type(exc).__name__}: {exc}. Usually a "
+            f"typo'd or misnested mj-* tag — check the template against "
+            f"https://documentation.mjml.io/"
+        ) from exc
+
     errors = list(getattr(result, "errors", None) or [])
     if errors:
         # Surface every problem at once — fixing them one render at a time is slow.

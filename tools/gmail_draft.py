@@ -163,10 +163,13 @@ def main() -> int:
                 smtp.login(sender, password)
                 smtp.send_message(msg)
         except smtplib.SMTPAuthenticationError as exc:
+            detail = exc.smtp_error
+            if isinstance(detail, bytes):
+                detail = detail.decode("utf-8", "replace")
             raise ToolError(
                 "Gmail rejected the login. GMAIL_APP_PASSWORD must be a 16-character "
                 "app password (https://myaccount.google.com/apppasswords), not your "
-                f"account password. Server said: {exc.smtp_error!r}"
+                f"account password. Server said: {detail}"
             ) from exc
         return emit(
             {

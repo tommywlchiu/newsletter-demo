@@ -64,7 +64,10 @@ All commands run with `.venv/Scripts/python.exe` on this machine.
 
 6. **Render.** One `render_png.py` per graphic into `.tmp/img/<cid>.png`. The filename stem
    *is* the cid — `.tmp/img/ig-stat.png` is referenced as `cid:ig-stat`. Also copy
-   `brand/logo.png` to `.tmp/img/logo.png`; the masthead expects `cid:logo`.
+   **both** `brand/logo.png` → `.tmp/img/logo.png` (`cid:logo`) **and**
+   `brand/logo-dark.png` → `.tmp/img/logo-dark.png` (`cid:logo-dark`) — the masthead
+   swaps between them for dark mode. Missing the second file doesn't error; it just
+   leaves dark-mode readers with no logo at all, so it's easy to skip by accident.
 
 7. **Write the issue JSON and build.** See `templates/newsletter.mjml.j2` for the shape.
    Two things that are easy to skimp and shouldn't be:
@@ -155,3 +158,33 @@ re-adds `fetch_url` explicitly to avoid silently narrowing what the preset had e
 `json_schema` makes the agent bind every figure to the `source_url` supporting it,
 instead of burying numbers in prose that something downstream has to re-parse. The
 readable briefing is rendered from that structure, not the other way round.
+
+**2026-09-13 — Dark mode was never actually verified, and it was broken.** The
+"doesn't touch the graphics" note above is still true, but the *email chrome* dark
+rules — written on day one, never rendered under `prefers-color-scheme: dark` until
+now — turned out to make the newsletter nearly illegible. Two distinct bugs, found by
+screenshotting `issue.html` with Playwright's `color_scheme="dark"` and reading
+`getComputedStyle` on the real output rather than reasoning from the CSS source:
+
+1. **Section backgrounds never actually flipped.** `.kn-shell { background: ... }`
+   was only ever applied to the `mj-body` wrapper. MJML compiles each `mj-section`'s
+   own `background-color` as a *separate* inline style on a nested, unclassed
+   `<table>` inside it — so the outer div went dark while the actual visible surface
+   stayed cream, and `kn-ink` text (correctly flipped to near-white) went invisible
+   against it. Fix: `.kn-shell, .kn-shell *` — the same wildcard-descendant pattern
+   already used for text color, applied to background too. A divider using
+   `border-color: ink` had the identical problem (vanishes against an ink
+   background); folded into the `kn-ink` rule, which now also forces `border-color`.
+2. **The masthead logo is a raster PNG with "Kitty" baked in as literal ink-colored
+   pixels** — a CSS rule can recolor text, never an image. `brand/logo-dark.png`
+   already existed for exactly this case but the template never referenced it. Fixed
+   with the standard email dark-mode pattern: both images in the HTML, `display:none`
+   toggled by the same media query, so exactly one is ever in flow. **This means
+   every future issue needs both `logo.png` and `logo-dark.png` copied to `.tmp/img/`
+   — see step 6 above.** Forgetting the second file doesn't error, it just makes the
+   masthead vanish for anyone reading in real dark mode.
+
+Lesson for the pipeline generally: a CSS rule that compiles without error and a CSS
+rule that visibly works are different claims. Anything gated behind
+`prefers-color-scheme` needs an actual `color_scheme="dark"` render before being
+trusted, not just a read of the stylesheet.

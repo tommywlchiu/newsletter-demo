@@ -25,18 +25,35 @@
     <mj-attributes>
       <mj-all font-family="{{ t.email.body }}" />
       <mj-text font-size="{{ t.scale.body }}px" line-height="1.62" color="{{ c.ink }}" />
-      <mj-section background-color="{{ c.paper }}" padding="0" />
+      {# kn-shell here too, not just on mj-body: each section's own background
+         is an inline attribute MJML bakes onto its <td>, so without this class
+         the dark-mode rule below only darkens the outer margin while every
+         section keeps its light background — and kn-ink text turns invisible
+         against it. Found by actually rendering with color_scheme=dark, not
+         by reading the CSS. #}
+      <mj-section background-color="{{ c.paper }}" css-class="kn-shell" padding="0" />
       <mj-column padding="0" />
     </mj-attributes>
     <mj-style>
       a { color: {{ c.marmalade_deep }}; }
       .kn-h2 { font-family: {{ t.email.display }}; }
+      .kn-logo-dark { display: none; }
       /* Apple Mail is the only client that honours this; Gmail and Outlook apply
          their own partial inversion, which the warm near-neutral palette absorbs. */
       @media (prefers-color-scheme: dark) {
-        .kn-shell { background: {{ c.ink }} !important; }
-        .kn-ink, .kn-ink * { color: {{ c.paper }} !important; }
+        /* MJML nests a <table> inside each css-class div that carries its OWN
+           inline background-color, untagged by the class — the wildcard is
+           required, "* { background }" alone flips only the outer wrapper
+           while the actual visible surface stays light. Confirmed by querying
+           getComputedStyle on the real compiled output, not by inspection. */
+        .kn-shell, .kn-shell * { background-color: {{ c.ink }} !important; }
+        .kn-ink, .kn-ink * { color: {{ c.paper }} !important; border-color: {{ c.paper }} !important; }
         .kn-muted, .kn-muted * { color: #B9AFA6 !important; }
+        /* logo.png bakes ink-colored "Kitty" text into the pixels for a light
+           background — invisible once the shell flips dark. Swap for the
+           logo-dark variant that already exists for exactly this case. */
+        .kn-logo-light { display: none !important; }
+        .kn-logo-dark { display: block !important; }
       }
     </mj-style>
   </mj-head>
@@ -46,7 +63,10 @@
     {# ---- masthead ---- #}
     <mj-section padding="28px 24px 0">
       <mj-column>
-        <mj-image src="cid:logo" alt="KittyNews" width="200px" align="left" padding="0" />
+        {# Stacked, not overlaid: display:none removes an image from flow, so
+           exactly one ever takes up space — no absolute-positioning needed. #}
+        <mj-image css-class="kn-logo-light" src="cid:logo" alt="KittyNews" width="200px" align="left" padding="0" />
+        <mj-image css-class="kn-logo-dark" src="cid:logo-dark" alt="KittyNews" width="200px" align="left" padding="0" />
       </mj-column>
     </mj-section>
 
@@ -55,7 +75,9 @@
         <mj-text css-class="kn-muted" font-size="{{ t.scale.caption }}px" color="{{ c.muted }}" letter-spacing="1.4px" padding="0">
           {{ 'ISSUE %s'|format(issue) if issue is defined and issue else '' }}{% if issue is defined and issue %} &nbsp;&middot;&nbsp; {% endif %}{{ date | upper }}
         </mj-text>
-        <mj-divider border-width="2px" border-color="{{ c.ink }}" padding="12px 0 0" />
+        {# border-color=ink would vanish against the dark-mode ink background;
+           kn-ink's dark rule flips border-color too, so tag it here. #}
+        <mj-divider css-class="kn-ink" border-width="2px" border-color="{{ c.ink }}" padding="12px 0 0" />
       </mj-column>
     </mj-section>
 

@@ -1,0 +1,11 @@
+{
+  "eyebrow": "The evaluation blind spot",
+  "title": "One benchmark, a fraction of the surface",
+  "subtitle": "Deployment surfaces a leading prompt-injection benchmark actually tests.",
+  "bars": [
+    { "label": "Catalogued deployment surfaces", "value": 12, "display": "12", "slot": 2 },
+    { "label": "Covered by InjecAgent", "value": 3, "display": "3", "slot": 1 }
+  ],
+  "footnote": "1,054 InjecAgent cases, all drawn from just 3 of the 12 surfaces the Agent Incident Registry catalogs.",
+  "source": "Agent Incident Registry v2, arXiv 2609.11030, submitted 11 Sep 2026"
+}

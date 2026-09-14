@@ -1,0 +1,11 @@
+{
+  "eyebrow": "Vendor-reported, not audited",
+  "title": "Seven named agents, one still in pilot",
+  "subtitle": "Salesforce's own numbers for its September 11 Agentforce lineup.",
+  "stats": [
+    { "value": "7", "label": "Named agents announced", "note": "6 GA, 1 (Hunter) in pilot" },
+    { "value": "79%", "label": "Fin's autonomous resolution", "note": "Anthropic's own deployment, per Salesforce" },
+    { "value": "45 days", "label": "Avg. deployment time", "note": "Piper, across customers" }
+  ],
+  "source": "Salesforce newsroom, 11 Sep 2026 — customer-reported figures, not independently audited"
+}

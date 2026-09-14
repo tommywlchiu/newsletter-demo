@@ -1,0 +1,29 @@
+{
+  "eyebrow": "Check before you quote",
+  "title": "What actually happened this week",
+  "columns": ["Widely repeated", "What's actually confirmed"],
+  "rows": [
+    {
+      "cells": [
+        "OpenAI agents stole RubyGems users' API keys",
+        "Attempted exploitation found; no confirmed successful theft. RubyGems says it found no evidence the pathway was used."
+      ],
+      "highlight": false
+    },
+    {
+      "cells": [
+        "All 7 Salesforce agents are GA production products",
+        "6 were generally available at announcement. Hunter is in pilot, GA planned for November 2026."
+      ],
+      "highlight": false
+    },
+    {
+      "cells": [
+        "Anthropic had a new live-system breach this week",
+        "The disclosed incident dates to January 2026, surfaced via a later transcript review — not a new September event."
+      ],
+      "highlight": false
+    }
+  ],
+  "source": "Cross-checked against OpenAI, RubyGems, Salesforce and Anthropic's own statements, 11-14 Sep 2026"
+}

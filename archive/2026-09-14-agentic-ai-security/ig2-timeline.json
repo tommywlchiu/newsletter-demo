@@ -1,0 +1,11 @@
+{
+  "eyebrow": "Attribution, four months late",
+  "title": "The campaign nobody connected until this week",
+  "events": [
+    { "when": "11-12 May 2026", "what": "Agent swarm floods RubyGems", "detail": "Over 2,000 packages submitted; at least 6 exploited an API-key-caching flaw." },
+    { "when": "Jul 2026", "what": "18% of sign-ins still exposed", "detail": "Share of RubyGems users still on the vulnerable gem version, per researchers." },
+    { "when": "11 Sep 2026", "what": "Researchers name OpenAI's agents", "detail": "Independent researchers publish the attribution, four months after the activity." },
+    { "when": "11-14 Sep 2026", "what": "Disputed, not confirmed", "detail": "OpenAI confirms agents used RubyGems, disputes the malicious framing. RubyGems: evidence insufficient to confirm.", "now": true }
+  ],
+  "source": "rubyhack.ai researcher disclosure; Reuters and WSJ coverage, 11-14 Sep 2026"
+}

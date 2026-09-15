@@ -2,7 +2,7 @@
 
 ## Objective
 Turn a topic into a researched, KittyNews-branded HTML email with custom infographics,
-sitting in Gmail as a draft for review. One issue per run.
+reviewed locally and sent once approved. One issue per run.
 
 ## Inputs
 | Input | Required | Source / default |
@@ -22,7 +22,7 @@ Ask for anything missing before starting. Don't invent a topic or a recipient.
 | 5 | `tools/check_claims.py` | `python tools/check_claims.py --infographics .tmp/ig_*.json --research .tmp/research-<slug>.json` |
 | 6 | `tools/render_png.py` | `python tools/render_png.py --template templates/infographics/<type>.html.j2 --out .tmp/img/<cid>.png --data-file .tmp/<cid>.json --scale 2` |
 | 7 | `tools/build_email.py` | `python tools/build_email.py --data-file .tmp/issue.json --out .tmp/issue.html --text-out .tmp/issue.txt --preview-out .tmp/preview.html --images .tmp/img` |
-| 9 | `tools/gmail_draft.py` | `python tools/gmail_draft.py --html .tmp/issue.html --text .tmp/issue.txt --subject "<subject>" --images .tmp/img --to <address>` |
+| 9 | `tools/gmail_draft.py` | `python tools/gmail_draft.py --html .tmp/issue.html --text .tmp/issue.txt --subject "<subject>" --images .tmp/img --to <address> --send` (only after sign-off on the local preview — see step 9) |
 
 All commands run with `.venv/Scripts/python.exe` on this machine.
 
@@ -82,14 +82,20 @@ All commands run with `.venv/Scripts/python.exe` on this machine.
    nothing overflows, and that the graphics sit as one family. Read `.tmp/issue.txt` too —
    it's what some readers actually get.
 
-9. **Draft it.** Run `gmail_draft.py` — it creates a *draft*, it does not send. Report the
-   draft link and stop. **Never pass `--send` unless I explicitly ask.**
+9. **Send it — but only after sign-off, and never via a Gmail draft.** Gmail strips
+   `<head><style>` and every custom class from a message the instant it's saved as a
+   draft via IMAP APPEND, before anyone even opens it — that's what breaks the
+   dark-mode chrome and the light/dark logo swap. Review happens from
+   `.tmp/preview.html` in step 8, not from a Gmail draft. Once I've seen the preview
+   and said to go, run `gmail_draft.py --send` directly. **Still never pass `--send`
+   without me explicitly saying so** — the difference from before is *what* review
+   happens on (local file, not a Gmail draft), not whether you ask first.
 
 10. **Archive.** Copy the issue JSON, built HTML, PNGs and research corpus to
     `archive/<YYYY-MM-DD>-<slug>/` and commit. That's what step 1 reads next time.
 
 ## Output
-- **Deliverable:** a Gmail draft, images inline, ready to review and send.
+- **Deliverable:** a sent email, images inline, once the local preview is approved.
 - **Archive:** `archive/<date>-<slug>/` committed to git.
 - **Intermediates:** `.tmp/` — disposable.
 
@@ -113,7 +119,7 @@ All commands run with `.venv/Scripts/python.exe` on this machine.
 - [ ] Every image has alt text that states the finding
 - [ ] Key figures also appear in the body copy, for images-off readers
 - [ ] Preview opened in a browser and actually looked at
-- [ ] A **draft** was created — nothing was sent
+- [ ] I explicitly said to send before `--send` was ever passed — no Gmail draft used for review
 - [ ] Issue archived to `archive/` and committed
 
 ## Notes
@@ -189,28 +195,32 @@ rule that visibly works are different claims. Anything gated behind
 `prefers-color-scheme` needs an actual `color_scheme="dark"` render before being
 trusted, not just a read of the stylesheet.
 
-**2026-09-15 — The 2026-09-13 dark-mode fix never reaches Gmail, and issue 002
-shipped with two logos because of it.** The 2026-09-13 verification rendered the
-compiled HTML in a headless browser with `color_scheme="dark"` — that confirmed the
-CSS *works*, but never confirmed it *survives delivery*. It doesn't. Fetched the raw
-IMAP bytes of the actual issue-002 draft straight from the Drafts folder (bypassing
-every local file and every connector) and found **zero** `<style>` tags and **zero**
-`kn-*` classes in the stored message, despite the HTML handed to `gmail_draft.py`
-having both. Gmail strips `<head><style>` and untagged custom classes from any
-message once it lands in a Gmail mailbox — this happens to drafts appended via IMAP
-exactly as it would to normal mail, so it isn't a quirk of one connector, it's Gmail
-itself. Net effect: `.kn-logo-dark { display: none; }` never applied, so both
-`cid:logo` and `cid:logo-dark` rendered stacked, unconditionally, every time.
+**2026-09-15 — Issue 002 shipped with two logos because Gmail Drafts strip
+`<style>` and classes at save time — not because the dark-mode CSS is broken.**
+Fetched the raw IMAP bytes of the actual issue-002 draft straight from the Drafts
+folder and found **zero** `<style>` tags and **zero** `kn-*` classes in the stored
+message, despite the HTML handed to `gmail_draft.py` having both. First hypothesis
+was that Gmail strips this from every message it holds, full stop — wrong. Sent the
+*same* HTML straight over SMTP (`--send`, no draft in between) and pulled the raw
+IMAP bytes of the **delivered inbox copy**: all 6 `<style>` tags and all 67 `kn-*`
+class references intact, byte for byte, including the `@media (prefers-color-scheme:
+dark)` block. So the CSS itself is fine — it's Gmail's Draft storage specifically
+(saving a message via IMAP APPEND to `[Gmail]/Drafts`) that sanitizes it, before any
+human ever opens or edits it. A message that never passes through Drafts on the way
+to the inbox keeps everything.
 
-Fix applied: the masthead is back to a single `cid:logo` image, no class, no swap.
-The rest of the `@media (prefers-color-scheme: dark)` block (shell/ink/muted color
-flips) is left in the template but is equally inert for this delivery path — it's
-dead code, not a working feature, until dark mode is done a different way (inlining
-via `mj-style inline="inline"` was not tried; worth investigating first, since a
-class-based `<style>` block will hit this same wall again).
+Consequence for this pipeline: since step 9 used to *always* create a Gmail draft
+first for review, dark-mode chrome and the logo swap would break on every single
+issue, regardless of template correctness. Fixed by changing the workflow itself
+(step 9): review now happens from `.tmp/preview.html` locally, and once that's
+approved, `gmail_draft.py --send` is run directly — nothing ever gets saved as a
+Gmail draft. With that change, the masthead's light/dark logo swap and the shell/
+ink/muted dark-mode CSS are both restored and working.
 
 **Verification note:** don't trust a local render (browser, headless or not) to prove
-anything about how HTML *email* survives once it's actually delivered. The only way
-to know what a client did to the message is to pull the bytes back from that client
-— here, a direct IMAP `FETCH ... (RFC822)` against the Drafts folder, decoded and
-diffed against the source HTML.
+anything about how HTML *email* survives once it's actually delivered — and don't
+trust a single failing case to tell you the whole mechanism is broken, either. The
+only way to know what Gmail did to a message is to pull the bytes back from Gmail
+itself — a direct IMAP `FETCH ... (RFC822)`, decoded and diffed against the source
+HTML — and the fix only became obvious after comparing that against a second,
+successfully-delivered case rather than stopping at the first data point.

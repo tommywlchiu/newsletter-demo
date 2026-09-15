@@ -34,10 +34,17 @@
       <mj-section background-color="{{ c.paper }}" css-class="kn-shell" padding="0" />
       <mj-column padding="0" />
     </mj-attributes>
+    {# 2026-09-15: this whole block is currently dead for real delivery. Gmail
+       strips <head><style> and every custom class from a message once it's
+       stored — confirmed by reading the raw IMAP bytes of a sent draft, not by
+       re-rendering the source HTML. None of the rules below, including the
+       @media toggle, ever reach a Gmail inbox. Left in place (harmless — it
+       just never fires) rather than ripped out, since fixing it for real needs
+       a different mechanism than class-based CSS. See workflows/build_newsletter.md
+       notes, 2026-09-15, before spending more time on this approach. #}
     <mj-style>
       a { color: {{ c.marmalade_deep }}; }
       .kn-h2 { font-family: {{ t.email.display }}; }
-      .kn-logo-dark { display: none; }
       /* Apple Mail is the only client that honours this; Gmail and Outlook apply
          their own partial inversion, which the warm near-neutral palette absorbs. */
       @media (prefers-color-scheme: dark) {
@@ -49,11 +56,6 @@
         .kn-shell, .kn-shell * { background-color: {{ c.ink }} !important; }
         .kn-ink, .kn-ink * { color: {{ c.paper }} !important; border-color: {{ c.paper }} !important; }
         .kn-muted, .kn-muted * { color: #B9AFA6 !important; }
-        /* logo.png bakes ink-colored "Kitty" text into the pixels for a light
-           background — invisible once the shell flips dark. Swap for the
-           logo-dark variant that already exists for exactly this case. */
-        .kn-logo-light { display: none !important; }
-        .kn-logo-dark { display: block !important; }
       }
     </mj-style>
   </mj-head>
@@ -63,10 +65,13 @@
     {# ---- masthead ---- #}
     <mj-section padding="28px 24px 0">
       <mj-column>
-        {# Stacked, not overlaid: display:none removes an image from flow, so
-           exactly one ever takes up space — no absolute-positioning needed. #}
-        <mj-image css-class="kn-logo-light" src="cid:logo" alt="KittyNews" width="200px" align="left" padding="0" />
-        <mj-image css-class="kn-logo-dark" src="cid:logo-dark" alt="KittyNews" width="200px" align="left" padding="0" />
+        {# Single logo only: Gmail strips <head><style> and all custom classes from
+           any message once it's stored (confirmed by fetching the raw IMAP bytes of
+           a sent draft — zero <style> tags, zero kn- classes survive, even though
+           the HTML handed to gmail_draft.py had both). The light/dark display:none
+           swap below therefore never applies in the one client this pipeline
+           actually delivers to: both images rendered, unconditionally, every time. #}
+        <mj-image src="cid:logo" alt="KittyNews" width="200px" align="left" padding="0" />
       </mj-column>
     </mj-section>
 

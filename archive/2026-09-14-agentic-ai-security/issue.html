@@ -50,7 +50,6 @@
     </style>
     <style type="text/css">a { color: #A8481A; }
       .kn-h2 { font-family: Georgia, 'Times New Roman', serif; }
-      .kn-logo-dark { display: none; }
       /* Apple Mail is the only client that honours this; Gmail and Outlook apply
          their own partial inversion, which the warm near-neutral palette absorbs. */
       @media (prefers-color-scheme: dark) {
@@ -62,11 +61,6 @@
         .kn-shell, .kn-shell * { background-color: #1A1614 !important; }
         .kn-ink, .kn-ink * { color: #FDFBF7 !important; border-color: #FDFBF7 !important; }
         .kn-muted, .kn-muted * { color: #B9AFA6 !important; }
-        /* logo.png bakes ink-colored "Kitty" text into the pixels for a light
-           background — invisible once the shell flips dark. Swap for the
-           logo-dark variant that already exists for exactly this case. */
-        .kn-logo-light { display: none !important; }
-        .kn-logo-dark { display: block !important; }
       }
     </table></style>
     
@@ -114,26 +108,13 @@
                   <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%">
             <tbody>
                 <tr>
-              <td align="left" class="kn-logo-light" style="font-size:0px;padding:0;word-break:break-word">
+              <td align="left" style="font-size:0px;padding:0;word-break:break-word">
                 
           <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;border-spacing:0px" >
             <tbody>
               <tr>
                 <td style="width:200px" >
                   <img alt="KittyNews" height="auto" src="cid:logo" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px" width="200" />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-              </td>
-            </tr><tr>
-              <td align="left" class="kn-logo-dark" style="font-size:0px;padding:0;word-break:break-word">
-                
-          <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;border-spacing:0px" >
-            <tbody>
-              <tr>
-                <td style="width:200px" >
-                  <img alt="KittyNews" height="auto" src="cid:logo-dark" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px" width="200" />
                 </td>
               </tr>
             </tbody>

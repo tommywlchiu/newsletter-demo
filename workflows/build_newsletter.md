@@ -188,3 +188,29 @@ Lesson for the pipeline generally: a CSS rule that compiles without error and a 
 rule that visibly works are different claims. Anything gated behind
 `prefers-color-scheme` needs an actual `color_scheme="dark"` render before being
 trusted, not just a read of the stylesheet.
+
+**2026-09-15 — The 2026-09-13 dark-mode fix never reaches Gmail, and issue 002
+shipped with two logos because of it.** The 2026-09-13 verification rendered the
+compiled HTML in a headless browser with `color_scheme="dark"` — that confirmed the
+CSS *works*, but never confirmed it *survives delivery*. It doesn't. Fetched the raw
+IMAP bytes of the actual issue-002 draft straight from the Drafts folder (bypassing
+every local file and every connector) and found **zero** `<style>` tags and **zero**
+`kn-*` classes in the stored message, despite the HTML handed to `gmail_draft.py`
+having both. Gmail strips `<head><style>` and untagged custom classes from any
+message once it lands in a Gmail mailbox — this happens to drafts appended via IMAP
+exactly as it would to normal mail, so it isn't a quirk of one connector, it's Gmail
+itself. Net effect: `.kn-logo-dark { display: none; }` never applied, so both
+`cid:logo` and `cid:logo-dark` rendered stacked, unconditionally, every time.
+
+Fix applied: the masthead is back to a single `cid:logo` image, no class, no swap.
+The rest of the `@media (prefers-color-scheme: dark)` block (shell/ink/muted color
+flips) is left in the template but is equally inert for this delivery path — it's
+dead code, not a working feature, until dark mode is done a different way (inlining
+via `mj-style inline="inline"` was not tried; worth investigating first, since a
+class-based `<style>` block will hit this same wall again).
+
+**Verification note:** don't trust a local render (browser, headless or not) to prove
+anything about how HTML *email* survives once it's actually delivered. The only way
+to know what a client did to the message is to pull the bytes back from that client
+— here, a direct IMAP `FETCH ... (RFC822)` against the Drafts folder, decoded and
+diffed against the source HTML.

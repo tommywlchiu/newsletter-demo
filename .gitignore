@@ -9,6 +9,9 @@ token.json
 .tmp/*
 !.tmp/.gitkeep
 
+# Weekly autorun logs — local operational history, not source
+logs/
+
 # Python
 __pycache__/
 *.py[cod]

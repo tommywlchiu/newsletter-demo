@@ -1,0 +1,29 @@
+{
+  "eyebrow": "Check before you quote",
+  "title": "What actually happened this week",
+  "columns": ["Widely repeated", "What's actually confirmed"],
+  "rows": [
+    {
+      "cells": [
+        "Cloudflare now blocks AI agents by default, everywhere",
+        "From Sep 15, its recommended default blocks Agent crawlers only on ad-supported pages for new domains. Non-ad sites are recommended to allow them; existing settings are migrated, not overwritten."
+      ],
+      "highlight": false
+    },
+    {
+      "cells": [
+        "Visa, Mastercard and Ant launched a universal agent-payment standard",
+        "They announced an early collaboration to explore shared Know-Your-Agent principles. Each network still runs its own verification and decisions."
+      ],
+      "highlight": false
+    },
+    {
+      "cells": [
+        "A bipartisan Senate investigation is already prosecuting OpenAI",
+        "The inquiry was launched by Sen. Hawley's Republican-led subcommittee. It's an investigation request, not a bipartisan prosecution."
+      ],
+      "highlight": false
+    }
+  ],
+  "source": "Cross-checked against Cloudflare, Visa/Mastercard/Ant and Sen. Hawley's own statements, 10-15 Sep 2026"
+}

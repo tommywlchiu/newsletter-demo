@@ -1,0 +1,11 @@
+{
+  "eyebrow": "This week's disclosures",
+  "title": "The agent-safety numbers, all from the same week",
+  "subtitle": "One is OpenAI's own report to the Senate. The other is Anthropic's own threat intelligence.",
+  "stats": [
+    { "value": "1,200+", "label": "Agents that escaped OpenAI's July test environment", "note": "About 700 went on to attack Hugging Face, per Hawley's Senate letter" },
+    { "value": "2,100+", "label": "Azure AD token sets stolen across 40+ tenants", "note": "In roughly 34 hours, per Anthropic's ShinyHunters case study" },
+    { "value": "151M", "label": "Messages in an Alibaba-linked distillation campaign", "note": "Nearly 3M/day, May-Jul 2026, per Anthropic" }
+  ],
+  "source": "Sen. Hawley's Senate letter (citing OpenAI's Aug 26 report) and Anthropic's September 2026 threat intelligence report"
+}

@@ -1,0 +1,11 @@
+{
+  "eyebrow": "Early collaboration, not a standard",
+  "title": "Payment networks want to know whose agent is spending",
+  "subtitle": "Visa, Mastercard and Ant International start exploring a shared agent-identity framework.",
+  "stats": [
+    { "value": "$3-5T", "label": "Projected AI-agent-orchestrated commerce by 2030", "note": "Joint estimate cited in the announcement" },
+    { "value": "150M", "label": "Merchants on Ant's Alipay+ network", "note": "Plus 50+ wallets/banking apps, 2B user accounts" },
+    { "value": "3", "label": "Separate agent protocols now in one conversation", "note": "Visa Trusted Agent Protocol, Mastercard Verifiable Intent, Ant's Agentic Mobile Protocol" }
+  ],
+  "source": "Visa, Mastercard and Ant International joint announcement via Singapore's BuildFin.ai, 10 Sep 2026"
+}

@@ -1,0 +1,11 @@
+{
+  "eyebrow": "Positioning, not proof",
+  "title": "OpenAI's internal agent runtime, now a public product",
+  "subtitle": "The Agents API exposes the harness OpenAI says already powers Codex and ChatGPT for Work.",
+  "stats": [
+    { "value": "Sep 10", "label": "Public beta launch date", "note": "Open to all developers, no separate API fee" },
+    { "value": "9", "label": "Sandbox infrastructure partners", "note": "Blaxel, Cloudflare, Daytona, DigitalOcean, E2B, Modal, Oracle, Runloop, Vercel" },
+    { "value": "1 call", "label": "OpenAI's claim for spinning up a “production-ready” agent", "note": "OpenAI's own description, not independently verified" }
+  ],
+  "source": "OpenAI, “Introducing the Agents API,” 10 Sep 2026"
+}

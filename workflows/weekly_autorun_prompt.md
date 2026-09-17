@@ -47,7 +47,10 @@ for review at any point (see the workflow's 2026-09-15 notes on why).
 
 **On success:** after archiving and committing per step 10, append one line to
 `logs/weekly-runs.log` (create the file if it doesn't exist) in the form
-`<UTC timestamp> OK issue <N> "<subject>" sent to <recipient>`.
+`<UTC timestamp> OK issue <N> "<subject>" sent to <recipient> cost=$<usage.cost.total_cost from the research corpus JSON, 4 decimal places>`.
+This is visibility only — there is no spend ceiling, so nothing blocks on it. If
+`usage` or `usage.cost` is missing from the corpus for any reason, write `cost=unknown`
+rather than stopping the run over it.
 
 **On failure or an early stop:** append one line to `logs/weekly-runs.log` in the
 form `<UTC timestamp> FAILED <short reason>`, then send a short plain-text email

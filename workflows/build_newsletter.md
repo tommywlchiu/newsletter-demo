@@ -198,6 +198,17 @@ rule that visibly works are different claims. Anything gated behind
 `prefers-color-scheme` needs an actual `color_scheme="dark"` render before being
 trusted, not just a read of the stylesheet.
 
+**2026-09-17 — Research cost is now persisted, not just printed.** The Perplexity
+SDK's response already carried `usage.cost.total_cost`; `research_topic.py` was
+computing it into the tool's stdout JSON but never writing it anywhere durable, so
+it vanished once that turn's context did. Now written into the corpus JSON itself
+(`.tmp/research-<slug>.json` → `usage.cost.total_cost`), which is what gets
+archived to `archive/<date>-<slug>/research.json` per step 10 — so every past
+issue's cost is recoverable from the archive going forward. The weekly autorun
+also logs it per run; see `weekly_autorun_prompt.md`'s "On success" step. This is
+visibility only, not a budget gate — nothing in the pipeline currently stops a run
+for spending too much.
+
 **2026-09-15 — Issue 002 shipped with two logos. First fix: revert to a single
 `cid:logo` image, no class-based swap.** Diagnosed by fetching the raw IMAP bytes
 of the actual issue-002 draft from the Drafts folder: **zero** `<style>` tags and

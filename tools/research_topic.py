@@ -362,6 +362,7 @@ def main() -> int:
     write_text(brief_path, briefing)
 
     usage = getattr(response, "usage", None)
+    usage_dict = usage.model_dump() if hasattr(usage, "model_dump") else None
     write_json(
         out,
         {
@@ -372,6 +373,7 @@ def main() -> int:
             "response_id": getattr(response, "id", None),
             "retrieved_at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
             "elapsed_seconds": round(elapsed, 1),
+            "usage": usage_dict,           # usage.cost.total_cost is what this run cost
             "briefing": briefing,          # check_claims.py reads this
             "findings": structured.get("findings", []),
             "summary": structured.get("summary", ""),
@@ -403,7 +405,7 @@ def main() -> int:
             "sources": len(sources),
             "citations": len(citations),
             "elapsed_seconds": round(elapsed, 1),
-            "usage": usage.model_dump() if hasattr(usage, "model_dump") else None,
+            "usage": usage_dict,
         }
     )
 

@@ -56,3 +56,12 @@ form `<UTC timestamp> FAILED <short reason>`, then send a short plain-text email
 subject `KittyNews weekly run failed` explaining what happened and what's left in
 `.tmp/` to look at. Do not leave a failure silent — the whole point of this file
 is that no one is watching for it live.
+
+**2026-09-17 — Failure alert verified before ever needing it.** Three real runs
+had shipped clean, so this branch had never fired. Dry-ran just the alert
+(same `smtplib`/`SMTP_SSL("smtp.gmail.com", 465)` call gmail_draft.py uses, same
+envelope, subject suffixed `[DRY RUN — not a real failure]` so it couldn't be
+mistaken for a real one) without touching `logs/weekly-runs.log`, then confirmed
+via Gmail search that it actually landed in the inbox — not just that the script
+exited 0. Same lesson as the dark-mode notes above: an untested code path earns
+no more trust than an untested CSS rule.

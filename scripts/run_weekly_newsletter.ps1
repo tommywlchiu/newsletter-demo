@@ -30,7 +30,17 @@ $prompt = Get-Content -Raw -Path $promptPath
 
 Set-Location $repoDir
 
+# claude.exe writes UTF-8 to stdout. Without this, Windows PowerShell 5.1 decodes
+# console output using the system codepage, mangling em-dashes/bullets/etc. before
+# the pipeline ever sees them. And this build's Tee-Object has no -Encoding param
+# at all (it always writes UTF-16LE), which every plain-text log reader then
+# mangles further. So this uses Out-File -Encoding utf8 instead of Tee-Object —
+# nothing streams to the console either way since no one watches an unattended
+# run live. Both fixes needed, or run logs come out unreadable (2026-09-17 finding).
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$OutputEncoding = [System.Text.Encoding]::UTF8
+
 & $claudeExe -p $prompt --model claude-sonnet-5 --permission-mode bypassPermissions *>&1 |
-    Tee-Object -FilePath $runLog
+    Out-File -FilePath $runLog -Encoding utf8
 
 exit $LASTEXITCODE

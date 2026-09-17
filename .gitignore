@@ -4,6 +4,11 @@ credentials.json
 token.json
 *.pem
 
+# Local Claude Code permission overrides — machine/session-specific, not source.
+# Currently also excluded by this machine's global gitignore, but that rule
+# won't exist for another clone or collaborator, so it belongs here too.
+.claude/settings.local.json
+
 # Disposable processing files
 # (.tmp/* not .tmp/ — git can't un-ignore a file inside an ignored directory)
 .tmp/*

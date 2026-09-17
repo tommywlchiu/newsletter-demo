@@ -65,8 +65,10 @@ All commands run with `.venv/Scripts/python.exe` on this machine.
 6. **Render.** One `render_png.py` per graphic into `.tmp/img/<cid>.png`. The filename stem
    *is* the cid — `.tmp/img/ig-stat.png` is referenced as `cid:ig-stat`. Also copy
    `brand/logo.png` → `.tmp/img/logo.png` (`cid:logo`) — the masthead uses this one
-   logo only. `brand/logo-dark.png` exists but is not currently used anywhere; see the
-   2026-09-15 dark-mode notes below before reaching for it.
+   logo only. A dark-mode masthead swap was tried and reverted twice; see the
+   2026-09-15 notes below before reaching for it again. `brand/logo-dark.png` itself
+   was deleted 2026-09-17 (unused) — regenerate it via `brand/README.md`'s render
+   command if dark mode is ever revisited with real proof it renders.
 
 7. **Write the issue JSON and build.** See `templates/newsletter.mjml.j2` for the shape.
    Two things that are easy to skimp and shouldn't be:
@@ -223,8 +225,9 @@ any media query. Reverted again: single `cid:logo` image, no `mj-attributes`
 `kn-shell` default, no `kn-ink`/`kn-muted` classes anywhere (they had no visual
 effect since color/border-color were always already set as direct inline
 attributes on each element — the classes were only ever there for the dark-mode
-override, which doesn't work). `brand/logo-dark.png` is unused; leave it alone
-rather than wiring it up again without a way to prove it renders.
+override, which doesn't work). `brand/logo-dark.png` was unused, so it's been deleted (2026-09-17). Regenerate it
+via `brand/README.md`'s render command if dark mode is ever revisited, but only
+with a way to prove it actually renders first — not before.
 
 **Verification note, corrected:** a raw IMAP fetch proves what Gmail *stored*.
 It proves nothing about what Gmail's viewer *applies* when displaying that stored

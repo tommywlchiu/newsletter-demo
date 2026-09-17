@@ -38,10 +38,13 @@ $PY tools/render_png.py --template brand/guidelines.html.j2 --out brand/guidelin
   not images, so the ramp only ever meets the sand ground baked into each PNG. That is why
   it is validated in light mode alone.
 - **The palette is derived, not chosen.** It came out of a brute-force search scored by the
-  `dataviz` skill's `validate_palette.js`. Before changing any chart colour, re-run:
+  `dataviz` skill's palette validator, vendored into this repo at `scripts/validate_palette.js`
+  (2026-09-17 — it only ever ran ephemerally inside a skill session before that, so the
+  documented repro command didn't actually work until it was copied in). Before changing
+  any chart colour, re-run:
 
   ```bash
-  node <dataviz-skill>/scripts/validate_palette.js \
+  node scripts/validate_palette.js \
     "#E8743B,#149184,#C0453A,#3D7AB8,#4E7A2F" --mode light --surface "#F5EBDF"
   ```
 

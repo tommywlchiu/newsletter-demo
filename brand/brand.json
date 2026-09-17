@@ -107,7 +107,11 @@
       "Result: lightness band PASS, chroma floor PASS, CVD separation PASS",
       "(worst adjacent dE 9.6 protan, target >=8), normal-vision floor PASS (20.1,",
       "target >=15), contrast RELIEF (marmalade 2.55:1 -> direct labels required).",
-      "Re-run: node scripts/validate_palette.js \"#E8743B,#149184,#C0453A,#3D7AB8,#4E7A2F\" --mode light --surface \"#F5EBDF\""
+      "Re-run: node scripts/validate_palette.js \"#E8743B,#149184,#C0453A,#3D7AB8,#4E7A2F\" --mode light --surface \"#F5EBDF\"",
+      "2026-09-17: this command didn't actually work until today — the script had",
+      "only ever run ephemerally inside a dataviz-skill session and was never saved",
+      "to scripts/. Copied in verbatim and re-run; reproduced this exact result",
+      "(CVD ΔE 9.6 protan, normal-vision floor 20.1, contrast WARN on marmalade)."
     ],
     "text_colors": [
       "WCAG contrast measured on both paper and sand. marmalade #E8743B scored 2.91",

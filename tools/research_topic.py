@@ -27,6 +27,7 @@ from pathlib import Path
 from typing import Any
 
 from common import (
+    ROOT,
     ToolError,
     emit,
     load_env,
@@ -382,7 +383,11 @@ def main() -> int:
             "sources": sources,            # and this
             "citations": citations,
             "queries": queries_used(response),
-            "raw": str(raw_path),
+            # Relative to the project root, not absolute — this corpus gets archived
+            # and committed, and an absolute path bakes in a machine-specific
+            # username/hostname into every future issue (2026-09-17 finding: three
+            # already-archived issues had leaked exactly that before this fix).
+            "raw": str(raw_path.relative_to(ROOT)),
         },
     )
 

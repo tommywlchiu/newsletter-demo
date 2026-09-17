@@ -6,7 +6,11 @@
 # exact registration command if this ever needs to be recreated).
 
 $ErrorActionPreference = "Stop"
-$repoDir = "REDACTED_LOCAL_PATH"
+# Derived from the script's own location (scripts/<this file> -> repo root) rather
+# than hardcoded, so this file doesn't bake in a machine-specific absolute path
+# (2026-09-17 finding: the old hardcoded path had leaked a real Windows username
+# and machine name into every commit that touched this file, on a public repo).
+$repoDir = Split-Path -Parent $PSScriptRoot
 $logDir = Join-Path $repoDir "logs"
 if (-not (Test-Path $logDir)) { New-Item -ItemType Directory -Path $logDir | Out-Null }
 
